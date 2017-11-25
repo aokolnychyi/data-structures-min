@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'scala'
     id 'idea'
 }
 group 'com.aokolnychyi'
@@ -11,3 +12,10 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    scalaVersion = '2.11.8'
+}
+
+dependencies {
+    compile "org.scala-lang:scala-library:$scalaVersion"
+}
