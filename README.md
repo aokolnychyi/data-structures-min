@@ -57,7 +57,7 @@ the capacity, regardless of whether elements have actually been added.
 #### Implementation
 
 This repo contains a sample implementation of singly linked lists in the 
-com.aokolnychyi.ds.list.SinglyLinkedList class. The following algorithms/features are covered:
+``com.aokolnychyi.ds.list.SinglyLinkedList`` class. The following algorithms/features are covered:
 
 - Addition to the front (``SinglyLinkedList#addFirst``)
 - Addition to the end (``SinglyLinkedList#addLast``)
@@ -69,6 +69,35 @@ com.aokolnychyi.ds.list.SinglyLinkedList class. The following algorithms/feature
 - Reverse in groups (``SinglyLinkedList#reverseInGroupsOf``)
 - Return kth last node (``SinglyLinkedList#kthToLastIteratively``)
 - Return kth last node using recursion (``SinglyLinkedList#kthToLastRecursively``)
+
+See examples in ``com.aokolnychyi.ds.list.SinglyLinkedListExamples``.
+
+### Functional Lists in Scala
+
+#### Notes
+
+- Functional programming relies on immutability & data sharing. So, Scala Lists are immutable.
+There is a special way to represent immutable lists that allows to prepend in O(1) time.
+If you implement immutable lists using immutable arrays, the runtime will be quadratic because each
+cons operation will need to copy the whole array, leading to a quadratic running time
+([source](https://softwareengineering.stackexchange.com/questions/132309/why-are-cons-lists-associated-with-functional-programming)).
+- Scala has an interface called List, which is implemented by a case object called Nil
+(represents an empty List) and a case class "::".
+- The ``List`` trait has to be covariant to be able to pass ``List[Nothing]`` as a tail to
+``List[String]``.
+- In Scala, ``Nothing`` is a type (final class). It is defined at the bottom of the Scala type System,
+which means it is a subtype of anything in Scala. There are no instances of ``Nothing``.
+``Nothing`` is used in the definitions of ``None``, ``Nil``, etc. In addition, you can use
+``Nothing`` as a return type for methods that never return or return abnormally
+(e.g., throw an exception).
+- Scala ``List`` is a monad.
+
+### Implementation
+
+A simplified implementation of functional lists is available in the
+``com.aokolnychyi.ds.list.scalaList`` file. Check out examples in
+``com.aokolnychyi.ds.list.ScalaListExamples``.
+
 
 ## Other important notes
 

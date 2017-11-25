@@ -1,6 +1,4 @@
-package com.aokolnychyi.ds.examples
-
-import com.aokolnychyi.ds.list.{Cons, Nil}
+package com.aokolnychyi.ds.list
 
 object ScalaListExamples extends App {
   val list = Cons(1, Cons(2, Cons(3, Nil)))

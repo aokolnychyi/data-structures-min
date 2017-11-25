@@ -1,6 +1,4 @@
-package com.aokolnychyi.ds.examples;
-
-import com.aokolnychyi.ds.list.SinglyLinkedList;
+package com.aokolnychyi.ds.list;
 
 public class SinglyLinkedListExamples {
 

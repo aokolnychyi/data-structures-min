@@ -1,6 +1,5 @@
 package com.aokolnychyi.ds.list
 
-// Must be covariant!
 sealed trait List[+T] {
   def isEmpty: Boolean
   def head: T
