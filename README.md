@@ -16,7 +16,7 @@ This chapter covers linked lists in Java and immutable functional lists in Scala
 
 - A linked list arranges objects in a linear manner. Unlike an array, however, in which the
 linear order is determined by the array indices, the order in a linked list is determined by a
-pointer in each object (source: "Introduction to Algorithms" by Thomas H. Cormen).
+pointer in each object ("Introduction to Algorithms" by Thomas H. Cormen).
 - Can be singly linked (only next pointer) or doubly linked list (with previous and next pointers).
 - Might be circular (the last element points to the first).
 - Might contain references to the head and tail.
@@ -73,7 +73,21 @@ com.aokolnychyi.ds.list.SinglyLinkedList class. The following algorithms/feature
 ## Other important notes
 
 - node vs wrapper on top
-- tail recursion
+- A recursive algorithm will add overhead since you store recursive calls in the execution stack.
+The space complexity of a recursive algorithm is proportional to the max length of the stack that it
+requires (if no additional space is used). However, tail recursion allows recursive algorithms to
+avoid this space overhead. In general, each function call may allocate a separate stack frame.
+However, there are recursive problems that do not need this overhead and they can reuse the same
+stack frame. Such problems are called tail-recursive problems. They call another function as the
+last step of their computations. Scala does tail recursion optimization at compile-time. A tail 
+recursive function is transformed into a loop by the compiler
+([source](https://stackoverflow.com/questions/1677419/does-scala-support-tail-recursion-optimization)). 
+There is no tail recursion optimization in Java (at least the Java specification does not require this).
+Originally, the permission model in the JVM was stack-sensitive and thus tail-calls had to handle
+the security aspects. I believe it is not a problem any more. There are some articles saying that
+the transformation from tail-recursive function to simple loop must be done dynamically by a
+JIT compiler. Therefore, it is up to JIT compilers to do this optimization
+(see [here](https://stackoverflow.com/questions/3616483/why-does-the-jvm-still-not-support-tail-call-optimization)).
 
 Hash Maps
 

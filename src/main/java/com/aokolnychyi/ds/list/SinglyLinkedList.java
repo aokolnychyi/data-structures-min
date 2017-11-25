@@ -8,6 +8,7 @@ public class SinglyLinkedList<E> {
   private Node lastNode;
   private int size;
 
+  // O(1) time
   public void addFirst(final E element) {
     final Node oldHeadNode = headNode;
     final Node newNode = new Node(element, oldHeadNode);
@@ -18,6 +19,7 @@ public class SinglyLinkedList<E> {
     size++;
   }
 
+  // O(1) time
   public void addLast(final E e) {
     final Node oldLastNode = lastNode;
     final Node newNode = new Node(e, null);
@@ -30,6 +32,7 @@ public class SinglyLinkedList<E> {
     size++;
   }
 
+  // O(1) time
   public E getFirst() {
     if (headNode == null) {
       throw new NoSuchElementException("List is empty!");
@@ -37,6 +40,7 @@ public class SinglyLinkedList<E> {
     return headNode.element;
   }
 
+  // O(1) time
   public E getLast() {
     if (headNode == null) {
       throw new NoSuchElementException("List is empty!");
@@ -48,6 +52,7 @@ public class SinglyLinkedList<E> {
     return size;
   }
 
+  // O(n^2) time
   public void removeDuplicates() {
     Node currentNode = headNode;
 
@@ -68,6 +73,7 @@ public class SinglyLinkedList<E> {
     }
   }
 
+  // O(n) time (if constants are neglected)
   public void swapPairwiseIteratively() {
     Node currentNode = headNode;
 
@@ -84,6 +90,7 @@ public class SinglyLinkedList<E> {
     nextNode.element = currentContent;
   }
 
+  // O(n) time and also O(n) space (a bit less) for recursion
   public void swapPairwiseRecursively() {
     performRecursiveSwap(headNode);
   }
@@ -95,6 +102,7 @@ public class SinglyLinkedList<E> {
     }
   }
 
+  // O(n) time
   public void reverse() {
     Node currentNode = headNode;
     Node previousNode = null;
@@ -110,6 +118,7 @@ public class SinglyLinkedList<E> {
     headNode = previousNode;
   }
 
+  // O(n) time and O(n) space
   public SinglyLinkedList<E> makeReversedCopy() {
     final SinglyLinkedList<E> reversedList = new SinglyLinkedList<>();
     Node currentNode = headNode;
@@ -123,6 +132,7 @@ public class SinglyLinkedList<E> {
     return reversedList;
   }
 
+  // O(n) time and O(n/k) space for recursion
   public void reverseInGroupsOf(int groupSize) {
     headNode = reverseInGroups(headNode, groupSize);
   }
@@ -152,6 +162,7 @@ public class SinglyLinkedList<E> {
     return previousNode;
   }
 
+  // O(n + k) time
   public E kthToLastIteratively(final int k) {
     // use two runner nodes
     Node firstRunnerNode = headNode;
@@ -176,15 +187,13 @@ public class SinglyLinkedList<E> {
     return firstRunnerNode.element;
   }
 
+  // O(n) time and space
   // You should keep track of both rank and node, so a wrapper is used
   public E kthToLastRecursively(final int k) {
     final RankedNode rankedNode = kthToLastRecursively(k, headNode);
     return rankedNode.node != null ? rankedNode.node.element : null;
   }
 
-  // Basically, a recursive algorithm will add overhead since you store recursive calls in the execution stack.
-  // But if the recursive function is the last line of the call (tail recursion) then there is no additional penalty.
-  // O(n) penalty in this case.
   private RankedNode kthToLastRecursively(final int neededRank, final Node currentNode) {
     if (currentNode == null) {
       return new RankedNode(0, null);
