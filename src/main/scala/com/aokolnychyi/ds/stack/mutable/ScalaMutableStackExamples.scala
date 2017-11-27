@@ -1,8 +1,6 @@
-package com.aokolnychyi.ds.examples
+package com.aokolnychyi.ds.stack.mutable
 
 import scala.util.Try
-
-import com.aokolnychyi.ds.stack.mutable.ScalaStack
 
 object ScalaMutableStackExamples {
 

@@ -76,13 +76,13 @@ See examples in ``com.aokolnychyi.ds.list.SinglyLinkedListExamples``.
 
 #### Notes
 
-- Functional programming relies on immutability & data sharing. So, Scala Lists are immutable.
+- Functional programming relies on immutability and data sharing. So, Scala Lists are immutable.
 There is a special way to represent immutable lists that allows to prepend in O(1) time.
 If you implement immutable lists using immutable arrays, the runtime will be quadratic because each
 cons operation will need to copy the whole array, leading to a quadratic running time
 ([source](https://softwareengineering.stackexchange.com/questions/132309/why-are-cons-lists-associated-with-functional-programming)).
-- Scala has an interface called List, which is implemented by a case object called Nil
-(represents an empty List) and a case class "::".
+- Scala has an interface called ``List``, which is implemented by a case object called ``Nil``
+(represents an empty list) and a case class ``::``.
 - The ``List`` trait has to be covariant to be able to pass ``List[Nothing]`` as a tail to
 ``List[String]``.
 - In Scala, ``Nothing`` is a type (final class). It is defined at the bottom of the Scala type System,
@@ -104,7 +104,7 @@ This chapters covers the Stack data structure that has the following general pro
 
 - Implements the LIFO (last in, first out) principle.
 - Addition and removal in O(1) time.
-- Frequently used to convert recursive algorithms into non-recursive
+- Frequently used to convert recursive algorithms into non-recursive.
 - Used to reverse sequences.
 
 ### Stack in Java
@@ -134,6 +134,25 @@ be found in ``com.aokolnychyi.ds.stack.StackExamples``. The following features a
 - Pop the top element (``Stack#pop``)
 - Access the optional top element (``Stack#top``)
 
+### Stack in Scala
+
+#### Notes
+
+- Scala has both immutable and mutable versions of a stack, as well as an ``ArrayStack``. 
+The immutable ``Stack`` is deprecated in favor of using ``List`` and ``::``.
+There’s an ``ArrayStack`` class, which according to the Scala documentation, "provides fast indexing
+and is generally slightly more efficient for most operations than a normal mutable stack." 
+The ``immutable.Stack`` class is backed by a ``val elements: List`` as a field, while the ``mutable.ArrayStack``
+is backed by an array and an index to the top element. In general, ``ArrayStack`` should be much
+faster than regular ``Stack``. Many people recommend using a ``List`` instead of an
+``immutable.Stack``. A ``List`` has at least one less layer of code, and you can push elements onto
+the ``List`` with ``::`` and access the first element with the head method.
+
+#### Implementation
+
+A sample immutable Stack is contained in ``com.aokolnychyi.ds.stack.ScalaStack`` and its mutable
+version is represented by ``com.aokolnychyi.ds.stack.mutable.ScalaStack``.
+
 ## Other important notes
 
 - node vs wrapper on top
@@ -152,6 +171,9 @@ the security aspects. I believe it is not a problem any more. There are some art
 the transformation from tail-recursive function to simple loop must be done dynamically by a
 JIT compiler. Therefore, it is up to JIT compilers to do this optimization
 (see [here](https://stackoverflow.com/questions/3616483/why-does-the-jvm-still-not-support-tail-call-optimization)).
+- If you implement an immutable data structure and want to remove an element, you can return
+a tuple on removal, where the first element represents the removed element and the second elements
+is the new collection.
 
 Hash Maps
 

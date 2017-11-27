@@ -7,11 +7,13 @@ class ScalaStack[T] {
   private val elements = ArrayBuffer[T]()
   private var topIndex = -1
 
+  // O(1) time
   def push(element: T): Unit = {
     elements.append(element)
     topIndex += 1
   }
 
+  // O(1) time
   def pop(): T = {
     if (topIndex < 0) throw new NoSuchElementException("Cannot pop from an empty stack")
     val topElement = elements.remove(topIndex)
@@ -19,6 +21,7 @@ class ScalaStack[T] {
     topElement
   }
 
+  // O(1) time
   def top(): Option[T] = elements.lastOption
 
 }

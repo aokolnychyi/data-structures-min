@@ -1,6 +1,4 @@
-package com.aokolnychyi.ds.examples
-
-import com.aokolnychyi.ds.stack.ScalaStack
+package com.aokolnychyi.ds.stack
 
 object ScalaStackExamples {
 
