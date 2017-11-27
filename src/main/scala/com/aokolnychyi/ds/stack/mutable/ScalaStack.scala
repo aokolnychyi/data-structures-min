@@ -1,8 +1,8 @@
-package com.aokolnychyi.ds.stack
+package com.aokolnychyi.ds.stack.mutable
 
 import scala.collection.mutable.ArrayBuffer
 
-class ScalaMutableStack[T] {
+class ScalaStack[T] {
 
   private val elements = ArrayBuffer[T]()
   private var topIndex = -1
@@ -24,9 +24,9 @@ class ScalaMutableStack[T] {
 }
 
 
-object ScalaMutableStack {
-  def apply[T](elements: T*): ScalaMutableStack[T] = {
-    val stack = new ScalaMutableStack[T]()
+object ScalaStack {
+  def apply[T](elements: T*): ScalaStack[T] = {
+    val stack = new ScalaStack[T]()
     for (element <- elements) stack.push(element)
     stack
   }

@@ -98,6 +98,41 @@ A simplified implementation of functional lists is available in the
 ``com.aokolnychyi.ds.list.scalaList`` file. Check out examples in
 ``com.aokolnychyi.ds.list.ScalaListExamples``.
 
+## Stack
+
+This chapters covers the Stack data structure that has the following general properties:
+
+- Implements the LIFO (last in, first out) principle.
+- Addition and removal in O(1) time.
+- Frequently used to convert recursive algorithms into non-recursive
+- Used to reverse sequences.
+
+### Stack in Java
+
+#### Notes
+
+- In Java, there is a class called ``Stack``, which extends ``Vector``. However, a more complete
+and consistent set of LIFO stack operations is provided by the ``Deque`` interface and its
+implementations, which should be used in preference to this class. Internally, the built-in
+``Stack`` uses ``protected Object[] elementData`` from the ``Vector`` class and calls 
+``Vector``’s methods. Most of the methods in ``Vector`` are synchronized.
+- ``ArrayDeque`` is a resizable-array implementation of the ``Deque`` interface. Under the hood,
+it has a circular buffer with head/tail pointers. Unlike ``LinkedList``, this class does
+not implement the ``List`` interface, which means that you can not access anything except the
+first and the last elements. This class is generally preferable to ``LinkedList`` for queues/stacks
+due to a limited amount of garbage it generates (the old array will be discarded on the extensions).
+Overall, ``ArrayDeque`` is the best queue and stack implementation. ``ArrayDeque`` doesn't have
+the overhead of node allocations that ``LinkedList`` has nor the overhead of shifting the array
+contents left on remove that ``ArrayList`` has ([source](http://java-performance.info/java-collections-overview/)).
+
+#### Implementation
+
+A sample stack implementation is available in ``com.aokolnychyi.ds.stack.Stack``. Some examples can
+be found in ``com.aokolnychyi.ds.stack.StackExamples``. The following features are supported:
+
+- Push an element (``Stack#push``)
+- Pop the top element (``Stack#pop``)
+- Access the optional top element (``Stack#top``)
 
 ## Other important notes
 
