@@ -225,14 +225,84 @@ with 2-3 Finger Tree and that's why this data structure is very slow on practice
 
 A sample immutable queue implementation is available in ``com.aokolnychyi.ds.queue.ScalaQueue``.
 Its mutable counterpart is defined in ``com.aokolnychyi.ds.queue.mutable.ScalaQueue`` and has the
-same underlying ideas as its Java version.
-Both implementations support the following features:
+same underlying ideas as its Java version. Both implementations support the following features:
 
 - Remove an element (``ScalaQueue#dequeue``)
 - Add an element (``ScalaQueue#enqueue``)
 - Get an optional element (``ScalaQueue#peek``)
 
 See examples in the corresponding folders.
+
+## Heap
+
+This chapter covers the Heap data structure that has the following features:
+
+- Heap is based on an array that represents a complete binary tree. A complete binary tree is a 
+binary in which every level is fully filled (except possibly the last level, which must be filled
+from left to right).
+- Can be min (the smallest element is a root) or max (the biggest element is a root) binary heap.
+A full binary tree is a binary tree in which no nodes have one child (i.e., one or two). A perfect
+binary tree is both full and complete.
+- Heaps are used in the Heap sort and Priority Queues.
+
+### Heap in Java
+
+#### Notes
+
+- The Heap data structure is used in Java's ``PriorityQueue``.
+- It takes O(n) time to build a binary heap from a set of elements.
+See [here](https://stackoverflow.com/a/9755805/4108401).
+- It takes O(log n) time to add an element and to remove the smallest/biggest (depending on the
+heap type) element since you need to restore the heap properties. 
+However, you can access the current min/max element in O(1) time.
+- ``PriorityQueue`` in Java has several methods with the same functionality but with one
+subtle difference: one method throws an exception and another one returns null if the queue is empty.
+For instance, ``peek()`` and ``element()`` vs and ``poll()`` and ``remove()``.
+- When you add a new element to a priority heap, you add it to the end. And then you call the
+fix operation, whose goal is to propagate the inserted element up till the parent element
+is less (max heap) or greater (min heap), or the index of the parent element is < 0 (already root).
+- Elements of a priority queue are ordered according to their natural ordering (``Comparable``),
+or by a ``Comparator`` provided at the queue construction time, depending on which constructor is
+used. ``PriorityQueue`` does not permit null elements. A priority queue relying on natural ordering
+also does not permit insertion of non-comparable objects (doing so may result in
+ ``ClassCastException``). The ``Iterator`` provided in ``iterator()`` is not guaranteed to traverse
+the elements of the priority queue in any particular order.
+- The Java implementation provides O(log(n)) time to enqueue and dequeue (``offer()``,
+``poll()``, ``remove()``, ``add()``); O(n) time for the ``remove(Object)`` and ``contains(Object)``
+methods; O(1) time for retrieval methods (``peek()``, ``element()``).
+
+#### Implementation
+
+There is a generic abstract class ``com.aokolnychyi.ds.heap.Heap`` and two concrete implementations:
+``com.aokolnychyi.ds.heap.MaxHeap`` and ``com.aokolnychyi.ds.heap.MinHeap``. The following
+features are supported:
+
+- Add an element ``Heap#add``
+- Get the min/max element or Optional.empty ``Heap#peek``
+- Get the min/max element or throw an exception ``Heap#element``
+- Remove the current min/max element ``Heap#remove``
+
+See examples in ``com.aokolnychyi.ds.heap.HeapExamples``.
+
+### Heap in Scala
+
+#### Heap
+
+#### Notes
+
+- The ``mutable.PriorityQueue`` class is based on a heap and it is very similar to what Java offers.
+- There is no built-in immutable priority queue in Scala. You can use scalaz ``FingerTree`` instead.
+
+#### Implementation
+
+There is ``com.aokolnychyi.ds.heap.ScalaMutableMaxHeap``, which uses ``ArrayBuffer`` internally.
+The following methods are supported:
+
+- Add an element ``ScalaMutableMaxHeap#+=``
+- Get the max element or None otherwise ``ScalaMutableMaxHeap#peek``
+- Get the current max element or throw an exception ``ScalaMutableMaxHeap#element`` 
+
+See examples in ``com.aokolnychyi.ds.heap.ScalaMutableMaxHeapExamples``.
 
 ## Vectors
 
@@ -257,7 +327,6 @@ of the considered data set. It is not possible with ``Vector``. In addition, for
 
 - node vs wrapper on top
 - Scala's Arrays are Java's Array.
-- Red-Black Trees can be also implemented in a functional manner. 
 - In computing, a persistent data structure is a data structure that always preserves the previous
 version of itself when it is modified. Such data structures are effectively immutable, as their
 operations do not (visibly) update the structure in-place, but instead always yield a new updated
@@ -291,7 +360,20 @@ The former preserves the insertion order and has fast access to head/tail while 
 is orthogonal and has nice performance for accessing elements in the middle.
 - Functional data structures are immutable and you need to copy them but you still want to achieve
 comparable asymptotic performance. This is done by sharing data between the old and new data
-structures. It is called structured sharing.
+structures. It is called structured sharing
+([source](https://www.infoq.com/presentations/Functional-Data-Structures-in-Scala)).
+- Scala's ``Ordered[T]`` extends Java's ``Comparable[T]``. ``Ordering[T]`` extends
+``Comparator[T].`` There is an implicit ordering to ordered mapping. The ``Ordering`` companion
+object provides an implicit ``Ordering[T]`` for any ``Comparable[T]``.
+-  ``: _*`` in Scala is called type ascription. Type ascription is just telling the compiler
+what type you expect out of an expression, from all possible valid types. ``: _*`` is a special
+instance of type ascription which tells the compiler to treat a single argument of
+a sequence type as a variable argument sequence, i.e. varargs. In other words, ``: _*`` is a
+special notation that tells the compiler to pass each element as its own argument, 
+rather than all of it as a single argument.
+
+- Red-Black Trees can be also implemented in a functional manner. 
+
 
 Hash Maps
 

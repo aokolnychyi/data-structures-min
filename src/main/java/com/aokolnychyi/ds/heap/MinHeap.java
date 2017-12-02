@@ -3,8 +3,9 @@ package com.aokolnychyi.ds.heap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-public class MinHeap<E extends Comparable<E>> {
+public class MinHeap<E extends Comparable<E>> extends Heap<E> {
 
   private final List<E> heap;
 
@@ -12,17 +13,19 @@ public class MinHeap<E extends Comparable<E>> {
     heap = new ArrayList<>();
   }
 
-  // O(n)
+  // O(n) time
   public MinHeap(List<E> elements) {
     heap = elements;
     final int numberOfElements = heap.size() - 1;
 
+    // there is no need to call minHeapify on leaves
     for (int index = (numberOfElements - 1) / 2; index >= 0; index--) {
       minHeapify(index);
     }
   }
 
-  // O(log(n))
+  // O(log(n)) time
+  @Override
   public void add(final E element) {
     heap.add(element);
     final int heapSize = heap.size();
@@ -30,9 +33,22 @@ public class MinHeap<E extends Comparable<E>> {
     fix(insertionIndex);
   }
 
-  // O(log(n))
-  // Can throw an exception. The most appropriate from the standard ones are IllegalStateException, NoSuchElementException.
-  public E extract() {
+  // O(1) time
+  @Override
+  Optional<E> peek() {
+    return heap.isEmpty() ? Optional.empty() : Optional.of(heap.get(0));
+  }
+
+  // O(1) time
+  @Override
+  E element() {
+    valideHeapNonEmpty();
+    return heap.get(0);
+  }
+
+  // O(log(n)) time
+  @Override
+  public E remove() {
     final E minElement = heap.get(0);
     final int heapSize = heap.size();
     Collections.swap(heap, 0, heapSize - 1);
@@ -41,11 +57,12 @@ public class MinHeap<E extends Comparable<E>> {
     return minElement;
   }
 
+  @Override
   public int size() {
     return heap.size();
   }
 
-  // O(log(n))
+  // O(log(n)) time
   private void fix(int index) {
     int indexOfParentElement = getIndexOfParentElement(index);
     E currentElement = heap.get(index);
@@ -68,7 +85,7 @@ public class MinHeap<E extends Comparable<E>> {
 
   // We assume that trees rooted at left and right are already minHeaps,
   // but element at index might be greater than its children
-  // O(log (n))
+  // O(log (n)) time
   private void minHeapify(final int index, int heapSize) {
     final int indexOfLeftElement = getIndexOfLeftElement(index);
     final int indexOfRightElement = getIndexOfRightElement(index);
@@ -94,15 +111,4 @@ public class MinHeap<E extends Comparable<E>> {
     }
   }
 
-  private int getIndexOfParentElement(final int index) {
-    return (index - 1) / 2;
-  }
-
-  private int getIndexOfLeftElement(final int index) {
-    return 2 * index + 1;
-  }
-
-  private int getIndexOfRightElement(final int index) {
-    return 2 * index + 2;
-  }
 }

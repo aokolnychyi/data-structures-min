@@ -6,14 +6,26 @@ class ScalaMutableMaxHeap[T](elements: Seq[T])(implicit imp: T => Ordered[T]) {
 
   private val heap: ArrayBuffer[T] = ArrayBuffer(elements: _*)
 
+  // O(n) time
   for (index <- elements.indices if index < elements.size / 2) {
     maxHeapify(index)
   }
 
+  // O(log n) time
   def +=(elem: T): this.type = {
     heap += elem
     bubbleUp(heap.size - 1)
     this
+  }
+
+  // O(1) time
+  def peek(): Option[T] = {
+    heap.headOption
+  }
+
+  // O(1) time
+  def element(): T = {
+    heap.head
   }
 
   private def bubbleUp(index: Int): Unit = {
@@ -44,20 +56,20 @@ class ScalaMutableMaxHeap[T](elements: Seq[T])(implicit imp: T => Ordered[T]) {
 
   private def parentIndexOp(index: Int): Option[Int] = {
     val parentIndex = (index - 1) / 2
-    Some(parentIndex).filter(isDefined)
+    Some(parentIndex).filter(isIndexDefined)
   }
 
   private def leftChildIndexOp(index: Int): Option[Int] = {
     val leftChildIndex = 2 * index + 2
-    Some(leftChildIndex).filter(isDefined)
+    Some(leftChildIndex).filter(isIndexDefined)
   }
 
   private def rightChildIndexOp(index: Int): Option[Int] = {
     val rightChildIndex = 2 * index + 2
-    Some(rightChildIndex).filter(isDefined)
+    Some(rightChildIndex).filter(isIndexDefined)
   }
 
-  private def isDefined(index: Int): Boolean = {
+  private def isIndexDefined(index: Int): Boolean = {
     index >= 0 && index < heap.size
   }
 
