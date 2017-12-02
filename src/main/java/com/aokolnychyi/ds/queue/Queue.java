@@ -20,6 +20,7 @@ public class Queue<E> {
     this.tailIndex = -1;
   }
 
+  // O(1) time
   public E dequeue() {
     if (size() == 0) throw new NoSuchElementException("cannot dequeue from an empty queue");
     E head = elements.get(headIndex);
@@ -33,6 +34,7 @@ public class Queue<E> {
     return head;
   }
 
+  // O(1) time
   public void enqueue(E element) {
     if (size() == capacity) throw new RuntimeException("cannot insert into a full queue");
     if (tailIndex == capacity - 1) {
@@ -45,6 +47,7 @@ public class Queue<E> {
     if (headIndex == -1) headIndex = 0;
   }
 
+  // O(1) time
   public Optional<E> peek() {
     return headIndex == -1 ? Optional.empty() : Optional.of(elements.get(headIndex));
   }

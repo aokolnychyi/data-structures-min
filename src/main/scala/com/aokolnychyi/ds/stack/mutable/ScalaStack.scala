@@ -22,7 +22,7 @@ class ScalaStack[T] {
   }
 
   // O(1) time
-  def top(): Option[T] = elements.lastOption
+  def peek(): Option[T] = elements.lastOption
 
 }
 

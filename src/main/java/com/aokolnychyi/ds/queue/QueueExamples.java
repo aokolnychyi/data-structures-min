@@ -1,4 +1,4 @@
-package com.aokolnychyi.ds.examples;
+package com.aokolnychyi.ds.queue;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

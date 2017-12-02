@@ -95,8 +95,14 @@ which means it is a subtype of anything in Scala. There are no instances of ``No
 ### Implementation
 
 A simplified implementation of functional lists is available in the
-``com.aokolnychyi.ds.list.scalaList`` file. Check out examples in
-``com.aokolnychyi.ds.list.ScalaListExamples``.
+``com.aokolnychyi.ds.list.scalaList`` file. The following features are supported:
+
+- Check if empty (``List#isEmpty``)
+- Get the first element (``List#head``)
+- Get the tail (``List#tail``)
+- Apply a function to all elements inside and return a new list (``List#map``)
+
+Check out examples in ``com.aokolnychyi.ds.list.ScalaListExamples``.
 
 ## Stack
 
@@ -151,11 +157,117 @@ the ``List`` with ``::`` and access the first element with the head method.
 #### Implementation
 
 A sample immutable Stack is contained in ``com.aokolnychyi.ds.stack.ScalaStack`` and its mutable
-version is represented by ``com.aokolnychyi.ds.stack.mutable.ScalaStack``.
+counterpart is represented by ``com.aokolnychyi.ds.stack.mutable.ScalaStack``. Both 
+implementations support the following features:
+
+- Push an element (``ScalaStack#push``)
+- Pop the top element (``ScalaStack#pop``)
+- Access the optional top element (``ScalaStack#peek``)
+
+## Queue
+
+This chapter covers the Queue data structure that has the following general properties:
+
+- Implements the first-in, first-out (FIFO) principle.
+- Fast addition and removal (see more below).
+- Useful when you need to retrieve things in the order that you insert them.
+
+### Queue In Java
+
+#### Notes
+
+- Addition and removal in O(1) time.
+- There is a separate interface ``Queue`` in Java. It is implemented by ``LinkedList`` and other
+classes. ``ArrayDeque`` is probably the best implementation.
+- A quote: "I believe that the main performance bottleneck in ``LinkedList`` is the fact that whenever
+you push to any end of the deque, behind the scene the implementation allocates a new linked list
+node, which essentially involves JVM/OS, and that's expensive. Also, whenever you pop from
+any end, the internal nodes of ``LinkedList`` become eligible for garbage collection and that's
+more work behind the scene" ([source](https://stackoverflow.com/a/32625029/4108401))
+
+#### Implementation
+
+A sample queue implementation based on a circular array is available in
+``com.aokolnychyi.ds.queue.Queue`` with examples in ``com.aokolnychyi.ds.queue.QueueExamples``. One
+limitation compared to ``ArrayDeque`` is that you have to predefine the capacity in advance and
+there is no auto resize. The following features are supported:
+
+- Remove an element (``Queue#dequeue``)
+- Add an element (``Queue#enqueue``)
+- Get an optional element (``Queue#peek``)
+- Get the current number of elements (``Queue#size``)
+
+### Queue in Scala
+
+#### Notes
+
+- Scala has a functional queue implementation, which is based on two linked lists: one containing
+the ''in'' elements and the other the ''out'' elements. Elements are added to the ''in'' list
+and removed from the ''out'' list. When the ''out'' list runs dry, the queue is pivoted by
+replacing the ''out'' list by ''in.reverse'', and ''in'' by ''Nil'' (source scaladoc).
+- Removal from the built-in ``immutable.Queue`` runs in amortized constant time.
+- There is even a better version of immutable Queues, called the Banker's Queue.
+It is based on lazy ``Stream``s instead of ``List``s to actually distribute the work.
+You can perform the reversal in truly O(1) time and you pay a penalty once you start to access
+those elements. The laziness distributes the amortization. In addition to using ``Stream``s, you
+need to store the sizes since ``Stream#reverse`` is not a lazy operation.
+- There is another data structure that can be used as a functional queue. It is called 2-3 Finger
+Tree. It is a double ended queue (aka, deck, deque), in which elements can be added to or removed
+from either the front (head) or back (tail). Also, access to the middle elements is quite fast
+(log n). On paper, it is very fast but on practice it is very slow.
+The reason for this is data locality. The JVM tries to be smart and can put objects, which are
+related, together (e.g., parts of an arrays are stored together, even objects that form a linked
+list can be stored together). This is called Heap locality. However, it is not possible
+with 2-3 Finger Tree and that's why this data structure is very slow on practice
+([source](https://www.infoq.com/presentations/Functional-Data-Structures-in-Scala)).
+
+#### Implementation
+
+A sample immutable queue implementation is available in ``com.aokolnychyi.ds.queue.ScalaQueue``.
+Its mutable counterpart is defined in ``com.aokolnychyi.ds.queue.mutable.ScalaQueue`` and has the
+same underlying ideas as its Java version.
+Both implementations support the following features:
+
+- Remove an element (``ScalaQueue#dequeue``)
+- Add an element (``ScalaQueue#enqueue``)
+- Get an optional element (``ScalaQueue#peek``)
+
+See examples in the corresponding folders.
+
+## Vectors
+
+- Bitmapped Vector Trie is a combination of associative and sequential data type since it preserves
+the insertion order and provides fast access to head/tail/middle elements. It is a functional
+analog to java.util.ArrayList. You append/prepend and update at nth
+place in (almost) constant time. Actually, it is O(log_32 n). log_32 of 2.5 billion is less than 7.
+- ``Vector`` has good cache-locality, where the 32-way branching of the tree means that
+elements at the leaves are stored in relatively-compact 32-element arrays. This makes
+traversing or manipulating them substantially faster than working with binary trees,
+where any traversal has to follow a considerable number of pointers up-and-down in order to
+advance a single element ([source](http://www.lihaoyi.com/post/ScalaVectoroperationsarentEffectivelyConstanttime.html)).
+- Bit-mapped Vector Tries are faster than Java's ``ArrayList`` for huge data sets and truly
+random access. This is explained by the architecture of modern computers and the fact that arrays
+of size 32 can be handled very nicely. However, the  ``ArrayList`` will be better for linear
+access since you can load a relatively big chunk of memory in one shot that represent a part
+of the considered data set. It is not possible with ``Vector``. In addition, for smaller data sets
+``ArrayList`` will be a better option since it has just to dereference once.
+([source](https://www.infoq.com/presentations/Functional-Data-Structures-in-Scala)).
 
 ## Other important notes
 
 - node vs wrapper on top
+- Scala's Arrays are Java's Array.
+- Red-Black Trees can be also implemented in a functional manner. 
+- In computing, a persistent data structure is a data structure that always preserves the previous
+version of itself when it is modified. Such data structures are effectively immutable, as their
+operations do not (visibly) update the structure in-place, but instead always yield a new updated
+structure ([source](https://en.wikipedia.org/wiki/Persistent_data_structure)).
+- If you do an operation say a million times, you don't really care about the worst-case or the
+best-case of that operation - what you care about is how much time is taken in total when you
+repeat the operation a million times. So it doesn't matter if the operation is very slow once
+in a while, as long as "once in a while" is rare enough for the slowness to be diluted away.
+Essentially amortised time means "average time taken per operation, if you do many operations".
+([source](https://stackoverflow.com/a/249695/4108401)) 
 - A recursive algorithm will add overhead since you store recursive calls in the execution stack.
 The space complexity of a recursive algorithm is proportional to the max length of the stack that it
 requires (if no additional space is used). However, tail recursion allows recursive algorithms to
@@ -174,6 +286,12 @@ JIT compiler. Therefore, it is up to JIT compilers to do this optimization
 - If you implement an immutable data structure and want to remove an element, you can return
 a tuple on removal, where the first element represents the removed element and the second elements
 is the new collection.
+- In functional programming, there are two types of data structures: sequential and associative.
+The former preserves the insertion order and has fast access to head/tail while the latter
+is orthogonal and has nice performance for accessing elements in the middle.
+- Functional data structures are immutable and you need to copy them but you still want to achieve
+comparable asymptotic performance. This is done by sharing data between the old and new data
+structures. It is called structured sharing.
 
 Hash Maps
 

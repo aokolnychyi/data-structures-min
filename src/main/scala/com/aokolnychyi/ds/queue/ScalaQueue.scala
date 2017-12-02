@@ -2,14 +2,17 @@ package com.aokolnychyi.ds.queue
 
 class ScalaQueue[T](in: List[T], out: List[T]) {
 
+  // O(1) time
   def enqueue(element: T): ScalaQueue[T] = ScalaQueue(element :: in, out)
 
+  // amortized O(1) time
   def dequeue(): (T, ScalaQueue[T]) = out match {
     case outHead :: outTail => (outHead, ScalaQueue(in, outTail))
     case Nil if in != Nil => ScalaQueue(Nil, in.reverse).dequeue()
     case Nil => throw new NoSuchElementException("Cannot dequeue from an empty queue")
   }
 
+  // amortized O(1) time
   def peek(): Option[T] = out match {
     case outHead :: _ => Some(outHead)
     case Nil if in != Nil => ScalaQueue(Nil, in.reverse).peek()

@@ -1,6 +1,4 @@
-package com.aokolnychyi.ds.examples
-
-import com.aokolnychyi.ds.queue.ScalaQueue
+package com.aokolnychyi.ds.queue
 
 object ScalaQueueExamples {
 

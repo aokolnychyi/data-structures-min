@@ -16,7 +16,7 @@ object Cons {
   def apply[T](head: T, tail: => Stream[T]) = new Cons(head, tail)
 }
 
-object Nil extends Stream[Nothing] {
+object Empty extends Stream[Nothing] {
   override def isEmpty: Boolean = true
   override def head: Nothing = {
     throw new NoSuchElementException("Trying to access the head of an empty Stream!")

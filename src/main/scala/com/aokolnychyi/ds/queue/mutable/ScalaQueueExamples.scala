@@ -1,13 +1,11 @@
-package com.aokolnychyi.ds.examples
+package com.aokolnychyi.ds.queue.mutable
 
 import scala.util.Try
 
-import com.aokolnychyi.ds.queue.ScalaMutableQueue
-
-object ScalaMutableQueueExamples {
+object ScalaQueueExamples {
 
   def main(args: Array[String]): Unit = {
-    val queue = new ScalaMutableQueue[Char](capacity = 4)
+    val queue = new ScalaQueue[Char](capacity = 4)
     queue.enqueue('a')
     println(queue.dequeue())
     queue.enqueue('a')
