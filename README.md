@@ -238,11 +238,10 @@ See examples in the corresponding folders.
 This chapter covers the Heap data structure that has the following features:
 
 - Heap is based on an array that represents a complete binary tree. A complete binary tree is a 
-binary in which every level is fully filled (except possibly the last level, which must be filled
-from left to right).
+binary tree in which every level is fully filled (except possibly the last level, which must be filled
+from left to right). A full binary tree is a binary tree in which no nodes have one child
+(i.e., one or two). A perfect binary tree is both full and complete.
 - Can be min (the smallest element is a root) or max (the biggest element is a root) binary heap.
-A full binary tree is a binary tree in which no nodes have one child (i.e., one or two). A perfect
-binary tree is both full and complete.
 - Heaps are used in the Heap sort and Priority Queues.
 
 ### Heap in Java
@@ -304,6 +303,84 @@ The following methods are supported:
 
 See examples in ``com.aokolnychyi.ds.heap.ScalaMutableMaxHeapExamples``.
 
+## Tree
+
+- A tree can be defined as a collection of nodes (starting at a root node), where each node is a
+data structure consisting of a value, together with a list of references to nodes (the "children"),
+with the constraints that no reference is duplicated, and none points to the root ([source](https://en.wikipedia.org/wiki/Tree_(data_structure))).
+- A tree in which each node has up to two children is called a binary tree.
+A node is called a “leaf” node if it has no children.
+- A Binary Search Tree (BST) is a binary tree in which every node fits a specific ordering
+property. Note that this must hold for all descendants not for just direct children.
+- A tree is “balanced enough” when its height is close to O(log n).
+- Basic operations on BSTs take time proportional to the height of the tree. For a complete binary
+search tree, such operations will take O(log n) time. If the tree is a linear chain of elements,
+the time will be O(n).
+- There are two types of tree traversals (same as for graphs): BFS and DFS. DFS, in turn, can
+be one of three subtypes: in-order (left, root, right), post-order (left, right, root), pre-order
+(root, left, right).
+- A tree is just a restricted form of a graph. Trees have direction (parent / child relationships)
+and don't contain cycles. They are similar to Directed Acyclic Graphs (or DAGs).
+So trees are DAGs with the restriction that a child can only have one parent ([source](https://stackoverflow.com/a/7707983/4108401)).
+- Operations on a BST are fast if the height of the search tree is small. If its height is large,
+however, the set operations may run no faster than with a linked list. Red-black trees are
+one of many search-tree schemes that are “balanced” in order to guarantee that basic dynamic-set
+operations take O(log n) time in the worst case ([source](https://gateoverflow.in/113819/ugcnet-dec2016-iii-33)).
+- Red-Black Trees are approximately balanced (the same number of black nodes).
+- An AVL Tree is another common way to implement tree balancing. An AVL Tree node stores the height
+of the subtrees rooted at this node. Then, for any node, we can check if the height is balanced.
+The balancing is done with the help of rotations (just like with Red-Black Trees).
+- Both AVL and Red-Black Trees support insertion, deletion, and look-up in guaranteed O(log n) time.
+However, AVL Trees provide a bit faster look-ups. Red-Black Trees are better for write-heavy environments.
+AVL rotations are harder to implement.
+
+### Trees in Java
+
+#### Notes
+
+- Java's ``TreeMap`` and ``TreeSet`` are built on Red-Black Trees.
+
+#### Implementation
+
+This repo contains a very generic binary tree implementation in
+``com.aokolnychyi.ds.tree.TreeNode``. In addition, there is
+``com.aokolnychyi.ds.tree.ComparableTreeNode``, which can be used to build trees, where nodes are
+mutually comparable. The latter also features a method called ``isBST()`` to check if a given binary
+tree is also a binary search tree.
+
+A binary search tree implementation is available in
+``com.aokolnychyi.ds.tree.bst.BinarySearchTree``. It supports the following features:
+
+- Build a BST from a sorted array (``BinarySearchTree#fromSortedArray``)
+- Compute the min height of a tree (``BinarySearchTree#getMinDepth``)
+- Compute the min height of a tree (``BinarySearchTree#getMinDepth2``)
+- Return elements by level using DFS (``BinarySearchTree#getElementsByLevel1``)
+- Return elements by level using BFS (``BinarySearchTree#getElementsByLevel2``)
+- Get the left view of a tree using DFS (``BinarySearchTree#getLeftView1``)
+- Get the left view of a tree using BFS (``BinarySearchTree#getLeftView2``)
+- Check if a tree is balanced (``BinarySearchTree#isBalanced1``)
+- Check if a tree is balanced (``BinarySearchTree#isBalanced2``)
+- Get the deepest node (``BinarySearchTree#getDeepestNode``)
+- Print a tree using DFS (``BinarySearchTree#performBreadthFirstWalk``)
+- Perform the in-order traversal using recursion (``BinarySearchTree#walkInOrderRecursively``)
+- Perform the in-order traversal without recursion (``BinarySearchTree#performIterativeInOrderTraversal``)
+- Perform the pre-order traversal using recursion (``BinarySearchTree#performPreOrderTraversal``)
+- Perform the pre-order traversal without recursion (``BinarySearchTree#performIterativePreOrderTraversal``)
+- Perform the post-order traversal using recursion (``BinarySearchTree#performPostOrderTraversal``)
+- Perform the post-order traversal without recursion (``BinarySearchTree#performIterativePostOrderTraversal``)
+- Search for an element recursively (``BinarySearchTree#searchRecursively``)
+- Search for an element iteratively (``BinarySearchTree#searchIteratively``)
+- Find minimum (``BinarySearchTree#findMinimum``)
+- Find maximum (``BinarySearchTree#findMaximum``)
+- Find the successor of a node (``BinarySearchTree#findSuccessor``)
+- Find the predecessor of a node (``BinarySearchTree#findPredecessor``)
+- Check if it is a valid BST (``BinarySearchTree#isBST``)
+- Find the least common ancestor (``BinarySearchTree#findLeastCommonAncestor1``)
+- Insert an element (``BinarySearchTree#insert``)
+- Remove an element (``BinarySearchTree#remove``)
+
+See examples in the corresponding packages.
+
 ## Vectors
 
 - Bitmapped Vector Trie is a combination of associative and sequential data type since it preserves
@@ -323,10 +400,17 @@ of the considered data set. It is not possible with ``Vector``. In addition, for
 ``ArrayList`` will be a better option since it has just to dereference once.
 ([source](https://www.infoq.com/presentations/Functional-Data-Structures-in-Scala)).
 
+## Stream
+
 ## Other important notes
 
 - node vs wrapper on top
 - Scala's Arrays are Java's Array.
+- Java's Stream is also lazy until you call a collector.
+- Variables used inside lambda expressions must be effectively final. A variable or parameter
+whose value is never changed after it is initialized is effectively final. In other words, if a
+reference is not changed it is effectively final even if the object referenced is changed
+([source](https://stackoverflow.com/a/20938132/4108401)).
 - In computing, a persistent data structure is a data structure that always preserves the previous
 version of itself when it is modified. Such data structures are effectively immutable, as their
 operations do not (visibly) update the structure in-place, but instead always yield a new updated

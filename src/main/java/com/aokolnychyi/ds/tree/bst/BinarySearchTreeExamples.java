@@ -1,6 +1,4 @@
-package com.aokolnychyi.ds.examples;
-
-import com.aokolnychyi.ds.tree.bst.BinarySearchTree;
+package com.aokolnychyi.ds.tree.bst;
 
 public class BinarySearchTreeExamples {
 
@@ -74,6 +72,10 @@ public class BinarySearchTreeExamples {
     System.out.println("Least common ancestor");
     System.out.println(binarySearchTree.findLeastCommonAncestor1(binarySearchTree.searchIteratively(1), binarySearchTree.searchRecursively(7)));
     System.out.println(binarySearchTree.findLeastCommonAncestor2(binarySearchTree.searchIteratively(1), binarySearchTree.searchRecursively(7)));
+
+    System.out.println("From sorted array");
+    Integer[] ints = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8};
+    System.out.println(BinarySearchTree.fromSortedArray(ints));
   }
 
 }
