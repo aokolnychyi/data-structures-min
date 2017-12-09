@@ -3,80 +3,34 @@ package com.aokolnychyi.ds.trie;
 import java.util.ArrayList;
 import java.util.List;
 
-// Also known as a Prefix Tree
-// The complexity of creating a trie is O(W*L),
-// where W is the number of words, and L is an average length of the word
-public class CaseInsensitiveTrie {
+public class CaseInsensitiveTrie implements Trie {
 
-  private TrieNode rootNode = new TrieNode();
+  private TrieNode rootNode = new CaseInsensitiveTrieNode();
 
   public TrieNode getRootNode() {
     return rootNode;
   }
 
-  /**
-   * Adds a word to the CaseInsensitiveTrie.
-   * <p>
-   * It takes O(n), where n is the length of the word.
-   */
+  @Override
   public void addWord(String word) {
     final String lowerCaseWord = word.toLowerCase();
     rootNode.addWord(lowerCaseWord);
   }
 
-  /**
-   * Get the words in the CaseInsensitiveTrie with the given prefix. O(prefixLength +
-   * 26^lengthOfLongestWordWithThisPrefix)
-   */
-  public List<String> getWordsWithPrefix(final String prefix) {
-    // Find the node which represents the last letter of the prefix
-    TrieNode currentLastNode = rootNode;
-    for (int i = 0; i < prefix.length(); i++) {
-      final char currentPrefixChar = prefix.charAt(i);
-      currentLastNode = currentLastNode.getChild(currentPrefixChar);
-
-      // If no node matches, then no words exist, return empty list
-      if (currentLastNode == null) return new ArrayList<>();
-    }
-
-    // Return the words which go from the last node
-    return currentLastNode.getWords();
-  }
-
-  // O(lengthOfWord)
-  public boolean contains(String word) {
-    // Find the node which represents the last letter of the word
-    TrieNode currentLastNode = rootNode;
-    for (int i = 0; i < word.length(); i++) {
-      final char currentWordChar = word.charAt(i);
-      currentLastNode = currentLastNode.getChild(currentWordChar);
-
-      // If no node matches, then no words exist, return empty list
-      if (currentLastNode == null) return false;
-    }
-    return currentLastNode.isWord();
-  }
-
-  public class TrieNode {
-    private TrieNode parent;
-    private TrieNode[] children;
+  public class CaseInsensitiveTrieNode implements TrieNode {
+    private CaseInsensitiveTrieNode parent;
+    private CaseInsensitiveTrieNode[] children;
     private boolean isLeaf; // Quick way to check if any children exist
     private boolean isLastCharacterInWord; // Does this node represent the last character of a word
     private char character; // The character this node represents
 
-    /**
-     * Constructor for the top level root node.
-     */
-    public TrieNode() {
-      children = new TrieNode[26];
+    public CaseInsensitiveTrieNode() {
+      children = new CaseInsensitiveTrieNode[26];
       isLeaf = true;
       isLastCharacterInWord = false;
     }
 
-    /**
-     * Constructor for a child node.
-     */
-    public TrieNode(char character) {
+    public CaseInsensitiveTrieNode(char character) {
       this();
       this.character = character;
     }
@@ -90,23 +44,20 @@ public class CaseInsensitiveTrie {
       return children[charIndex] != null;
     }
 
-    /**
-     * Returns the child TrieNode representing the given char,
-     * or null if no node exists.
-     */
-    public TrieNode getChild(char character) {
+    public CaseInsensitiveTrieNode getChild(char character) {
       final char lowerCaseChar = Character.toLowerCase(character);
       final int charIndex = getCharIndex(lowerCaseChar);
       return children[charIndex];
     }
 
     /**
-     * Adds a word to this node. This method is called recursively and
+     * Adds a word to this node.
+     *
+     * This method is called recursively and
      * adds child nodes for each successive letter in the word, therefore
      * recursive calls will be made with partial words.
-     * <p>
+     *
      * It takes linear time to insert a word.
-     * Time complexity is O(lengthOfTheWord).
      *
      * @param word the word to add
      */
@@ -115,10 +66,9 @@ public class CaseInsensitiveTrie {
       final char currentChar = word.charAt(0);
       final int charIndex = getCharIndex(currentChar);
 
-      // Important check that is done to avoid creation
-      // of new nodes if they are already there
+      // Important! avoid creation of new nodes if they are already there
       if (children[charIndex] == null) {
-        children[charIndex] = new TrieNode(currentChar);
+        children[charIndex] = new CaseInsensitiveTrieNode(currentChar);
         children[charIndex].parent = this;
       }
 
@@ -132,9 +82,9 @@ public class CaseInsensitiveTrie {
 
     /**
      * Returns a List of String objects which are lower in the hierarchy that this node.
-     * <p>
-     * Takes O(prefixLength + 26^lengthOfLongestWordWithThisPrefix.
-     * This time complexity represents the worst case. Usually, it will be much master since you
+     *
+     * Takes O(prefixLength + 26^lengthOfLongestWordWithThisPrefix).
+     * This time complexity represents the worst case. Usually, it will be much better since you
      * won't call the function recursively 26 times at each iteration.
      * In addition, lengthOfLongestWordWithThisPrefix should not be big.
      */
@@ -153,7 +103,7 @@ public class CaseInsensitiveTrie {
       // If any children
       if (!isLeaf) {
         // Add any words belonging to any children
-        for (TrieNode child : children) {
+        for (CaseInsensitiveTrieNode child : children) {
           if (child != null) {
             final List<String> childWords = child.getWords();
             list.addAll(childWords);

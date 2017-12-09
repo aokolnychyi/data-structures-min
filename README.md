@@ -374,12 +374,152 @@ A binary search tree implementation is available in
 - Find maximum (``BinarySearchTree#findMaximum``)
 - Find the successor of a node (``BinarySearchTree#findSuccessor``)
 - Find the predecessor of a node (``BinarySearchTree#findPredecessor``)
-- Check if it is a valid BST (``BinarySearchTree#isBST``)
+- Check if a tree is a valid BST (``BinarySearchTree#isBST``)
 - Find the least common ancestor (``BinarySearchTree#findLeastCommonAncestor1``)
 - Insert an element (``BinarySearchTree#insert``)
 - Remove an element (``BinarySearchTree#remove``)
 
 See examples in the corresponding packages.
+
+### Trees in Scala
+
+#### Notes
+
+- Red-Black Trees can be also implemented in a purely functional manner.
+- BST implementations usually really on implicits.
+
+#### Implementation
+
+This repo contains a set of classes that can represent a binary tree. Those classes are contained
+in ``com.aokolnychyi.ds.tree.scalaBinaryTree`` file. There is a generic trait called ``Tree``, which
+is implemented by ``Leaf``, ``Empty``, ``Node``. The following methods are supported:
+
+- Compute the size of a tree (``Tree#size``)
+- Compute the depth of a tree (``Tree#depth``)
+- Apply a function to all elements of a tree (``Tree#map``)
+- Fold a tree in the pre-order manner (``Tree#foldPreOrder``)
+- Fold a tree in the in-order manner (``Tree#foldInOrder``)
+- Fold a tree in the post-order manner(``Tree#foldPostOrder``)
+- Compute the size of a tree via fold (``Tree#sizeViaFold``)
+- If there is an implicit ordering, you can find the max element (``Tree#max``)
+
+## Prefix Tree (Trie)
+
+This chapter covers the concept of prefix trees (aka tries), which have the following
+properties:
+
+- Useful when dealing with a set of words to perform some queries.
+- Trie is an efficient information retrieval data structure. Using a trie, search complexities can
+be brought to optimal limit (key length). If we store keys in a binary search tree, a well
+balanced BST will need time proportional to M * log N, where M is the maximum string length and
+N is the number of keys in the tree. Using a trie, we can search the key in O(M) time. However, a
+penalty is on trie storage requirements (for each character there is a separate node). In BST,
+you will need to create nodes for each string not char. The construction of a BST will
+take O(numberOfWords^2 * lengthOfWord) time in the worst case and
+O(numberOfWords * log (numberOfWords) * lengthOfWord) in the best case
+([source](http://www.geeksforgeeks.org/trie-insert-and-search/)).
+- Looking up data in a trie is faster in the worst case, O(m) time (where m is the length of a
+search string), compared to an imperfect hash table. An imperfect hash table can have key
+collisions. The worst-case lookup speed in an imperfect hash table is O(N) time, but far more
+typically is O(1), with O(m) time spent evaluating the hash
+([source](http://old-www.cs.dartmouth.edu/~cs50/data/tse-output/wikipedia/depth2/8)).
+- Compressed tries are tries that collapse non-branching paths into a single edge. Compressed tries
+have O(numberOfElements) space complexity since they get rid of all non-branching nodes.
+- A suffix tree is a compressed trie which has O(textLength) space complexity.
+- You have multiple options if you want to solve the "Exact Patter Matching" problem, where
+you are given a text and a pattern to search within that text. A brute force solution is to
+iterate through the text and try the pattern at each position. This will take
+O(lengthOfText * lengthOfPattern) time because you will try to match lengthOfText times and each
+time it might take up to lengthOfPattern of comparisons. In case of a lot of patterns, the time
+complexity will become O(lengthOfText * totalLengthOfPatterns). Obviously, this will be a
+big problem if you have a lot of patterns to match. However, the approach does not use any
+additional memory. The problem with the naive solution is that you try each pattern one by one.
+While you are trying one pattern, the remaining ones are waiting. So, you can try to build a
+trie of patterns. Then, at each point in the text, you can try to walk through the constructed
+trie to find matches. The runtime of this approach is O(lengthOfText * lengthOfLongestPattern)
+since you will iterate through the trie lengthOfText times and each time you can do up to
+lengthOfLongestPattern comparisons. You also should take into account that the construction also
+takes some time. So, the insertion time of a word into a trie takes O(wordLength). You will
+need to do O(numberOfPatterns) insertions. Overall, the construction will take
+O(totalLengthOfPatterns). Moreover, this approach uses O(totalLengthOfPatterns) addition space.
+Instead of packing all patterns into a trie, we can form a trie out of all suffixes of our text.
+Then we can check each pattern if it can be spelled out from the root downward in the trie of
+suffixes. There is a problem: you need to identify where you matches are located in the given text.
+For that reason, you need to attach some information to leaves or nodes. To form a trie of suffixes
+you need to process O(lengthOfText) suffixes. On average, each of them will be O(lengthOfText/2).
+The time complexity to construct the trie is O(numberOfSuffixes * lengthOfSuffixes) =
+O(lengthOfText * (lengthOfText/2)) = O(lengthOfText^2). The time complexity of looking up
+patterns is O(numberOfPatterns * lengthOfLongestPattern).
+The memory footprint is O(lengthOfText^2). This value might be smaller or bigger than
+O(totalLengthOfPatterns). It depends on circumstances. 
+
+| Algorithm             | Time                                                                | Additional Space         |
+| --------------------- | ------------------------------------------------------------------- | ------------------------ |
+| Brute force           | O(lengthOfText * totalLengthOfPatterns)                             | O(1)                     |
+| Trie of patterns      | O(totalLengthOfPatterns) + O(lengthOfText * lengthOfLongestPattern) | O(totalLengthOfPatterns) |
+| Trie of text suffixes | O(lengthOfText^2) + O(numberOfPatterns * lengthOfLongestPattern)    | O(lengthOfText^2)        |
+
+- The main idea behind suffix trees is that we can reduce the number of edges in suffix tries
+by combining the edges on any non-branching path into a single edge. The uncompressed data
+structure is also sometimes called as a suffix trie (not tree). The memory footprint of a suffix
+tree is O(lengthOfText). However, this is not 100% true since we need to store all edge labels.
+They will take the same amount of space as in the previous solution. For that reason,
+we can store only indices in the original text.
+- A naive approach to build a suffix tree will operate in O(textLength^2) time. 
+There is another very complicated algorithm that will build a suffix tree in O(textLength) time.
+Each suffix tree can be converted into a suffix array and vice versa. Both of these data structures
+can be built in linear time.
+- More details about suffix arrays are available
+[here](http://www.geeksforgeeks.org/suffix-array-set-1-introduction/) and
+[here](https://en.wikipedia.org/wiki/Suffix_array).
+
+### Prefix Tree in Java
+
+#### Notes
+
+- You can also expose the root node if you want to efficiently iterate in some cases. Otherwise,
+using a wrapper might be better.
+- The internal array of children can be replaced with a hash map (Character -> Node).
+- The root node is empty.
+- To add a word - O(L) time complexity.
+- To search a word - O(L) time complexity.
+- The time complexity for creating a trie is O(W * L), where W is the number of words, and L is
+the max word length.
+- When you are implementing a trie, you have to decide how to deal with the case of letters.
+Most likely, you will convert each word that you add to a lower case version and then store it.
+- You can get a list of words with a given prefix in
+O(prefixLength + 26^lengthOfLongestWordWithThisPrefix) time.
+
+#### Implementation
+
+This repo contains two Java trie implementations: ``com.aokolnychyi.ds.trie.CaseSensitiveTrie`` and 
+``com.aokolnychyi.ds.trie.CaseInsensitiveTrie``. Each class conforms to the parent ``Trie`` 
+interface, which defines the following methods:
+
+- Add a word ``com.aokolnychyi.ds.trie.Trie#addWord``
+- Get words with a certain prefix ``com.aokolnychyi.ds.trie.Trie#getWordsWithPrefix``
+- Check if a word is contained in a trie ``com.aokolnychyi.ds.trie.Trie#contains``
+
+See examples in ``com.aokolnychyi.ds.trie.CaseSensitiveTrieExamples`` and 
+``com.aokolnychyi.ds.trie.CaseInsensitiveTrieExamples`` classes.
+
+### Prefix Tree in Scala
+
+#### Implementation
+
+This repo also contains an immutable prefix tree implementation in Scala. It can be
+found in ``com.aokolnychyi.ds.trie.PrefixTree`` and features the following methods:
+
+- Add a word (``PrefixTree#+``)
+- Check if a word contains in a prefix tree (``PrefixTree#contains``)
+
+Under the hood, the work is delegated to the root node, which is defined
+in the ``com.aokolnychyi.ds.trie.PrefixTreeNode`` trait with concrete implementations in
+``com.aokolnychyi.ds.trie.Empty``, ``com.aokolnychyi.ds.trie.Root``, ``com.aokolnychyi.ds.trie.CharNode``.
+The solution uses structural sharing in immutable hash maps, which allows ``PrefixTree`` to keep 
+the existing branches that do not change.
+
+See examples in ``com.aokolnychyi.ds.trie.ScalaPrefixTreeExamples``.
 
 ## Vectors
 
@@ -455,9 +595,7 @@ instance of type ascription which tells the compiler to treat a single argument 
 a sequence type as a variable argument sequence, i.e. varargs. In other words, ``: _*`` is a
 special notation that tells the compiler to pass each element as its own argument, 
 rather than all of it as a single argument.
-
-- Red-Black Trees can be also implemented in a functional manner. 
-
+- Case and top-level classes cannot be implicit.
 
 Hash Maps
 

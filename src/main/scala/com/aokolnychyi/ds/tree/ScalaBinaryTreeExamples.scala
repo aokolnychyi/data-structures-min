@@ -1,11 +1,14 @@
-package com.aokolnychyi.ds.examples
-
-import com.aokolnychyi.ds.tree.{Empty, Leaf, Node}
+package com.aokolnychyi.ds.tree
 
 object ScalaBinaryTreeExamples extends App {
 
   import com.aokolnychyi.ds.tree.Implicits._
 
+  //         1
+  //       /   \
+  //      2     4
+  //     / \   / \
+  //    E   6 3   E
   val leaf1 = Leaf(6)
   val leaf2 = Leaf(3)
   val node1 = Node(2, Empty, leaf1)
@@ -22,6 +25,8 @@ object ScalaBinaryTreeExamples extends App {
 
   val preOrderTraversal = rootNode.foldPreOrder("")(_ + _)
   println("Pre-order traversal: " + preOrderTraversal)
+  val inOrderTraversal = rootNode.foldInOrder("")(_ + _)
+  println("In-order traversal: " + inOrderTraversal)
   val postOrderTraversal = rootNode.foldPostOrder("")(_ + _)
   println("Post-order traversal: " + postOrderTraversal)
 

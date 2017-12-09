@@ -1,12 +1,10 @@
-package com.aokolnychyi.ds.examples
+package com.aokolnychyi.ds.tree.bst
 
 import scala.util.Try
 
-import com.aokolnychyi.ds.tree.bst.{EmptyLeaf, Node}
-
 object ScalaBSTExamples extends App {
 
-  val bst = EmptyLeaf[Int]()
+  val bst = Leaf[Int]()
       .insert(5)
       .insert(1)
       .insert(3)

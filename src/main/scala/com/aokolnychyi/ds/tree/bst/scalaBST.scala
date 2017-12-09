@@ -15,14 +15,14 @@ sealed abstract class ScalaBST[T](implicit imp: T => Ordered[T]) {
   private[bst] def findSuccessor(root: Node[T]): Option[T] = None
 
   private[bst] def isSubtree(root: ScalaBST[T], subTree: ScalaBST[T]): Boolean = root match {
-    case EmptyLeaf() => root eq subTree
+    case Leaf() => root eq subTree
     case Node(_, left, right) =>
       (root eq subTree) || isSubtree(left, subTree) || isSubtree(right, subTree)
   }
 }
 
-case class EmptyLeaf[T]()(implicit imp: T => Ordered[T]) extends ScalaBST[T] {
-  override def insert(newValue: T): ScalaBST[T] = Node(newValue, EmptyLeaf[T](), EmptyLeaf[T]())
+case class Leaf[T]()(implicit imp: T => Ordered[T]) extends ScalaBST[T] {
+  override def insert(newValue: T): ScalaBST[T] = Node(newValue, Leaf[T](), Leaf[T]())
   override def remove(target: T): ScalaBST[T] = this
   override def contains(value: T): Boolean = false
   override def find(value: T): Option[ScalaBST[T]] = None
@@ -43,9 +43,9 @@ case class Node[T](
 
   override def remove(target: T): ScalaBST[T] = target match {
     case `value` => this match {
-      case Node(_, EmptyLeaf(), EmptyLeaf()) => EmptyLeaf()
-      case Node(_, EmptyLeaf(), rightChild) => rightChild
-      case Node(_, leftChild, EmptyLeaf()) => leftChild
+      case Node(_, Leaf(), Leaf()) => Leaf()
+      case Node(_, Leaf(), rightChild) => rightChild
+      case Node(_, leftChild, Leaf()) => leftChild
       case Node(_, leftChild, rightChild) =>
         // the right subtree cannot be Leaf at this point and it is safe to assume that there
         // will always be a min element in the right subtree
@@ -65,7 +65,7 @@ case class Node[T](
   }
 
   override lazy val min: Option[T] = this match {
-    case Node(_, EmptyLeaf(), _) => Some(value)
+    case Node(_, Leaf(), _) => Some(value)
     case _ => left.min
   }
 
