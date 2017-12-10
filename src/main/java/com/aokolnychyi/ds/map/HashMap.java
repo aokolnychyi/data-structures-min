@@ -8,6 +8,7 @@ public class HashMap<K, V> {
     this.buckets = (TreeNode<K, V>[]) new TreeNode[numberOfBuckets];
   }
 
+  // O(log n) time and O(log n) or  space in the worst case
   public void put(K key, V value) {
     int bucketIndex = getBucketIndex(key);
     buckets[bucketIndex] = insert(buckets[bucketIndex], key, value);
@@ -26,6 +27,7 @@ public class HashMap<K, V> {
     return node;
   }
 
+  // O(log n) time and O(log n) or O(n) space in the worst case
   public V get(K key) {
     int bucketIndex = getBucketIndex(key);
     return get(buckets[bucketIndex], key);

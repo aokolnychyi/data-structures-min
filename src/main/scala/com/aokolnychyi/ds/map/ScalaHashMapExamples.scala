@@ -1,6 +1,4 @@
-package com.aokolnychyi.ds.examples
-
-import com.aokolnychyi.ds.map.ScalaHashMap
+package com.aokolnychyi.ds.map
 
 object ScalaHashMapExamples {
 

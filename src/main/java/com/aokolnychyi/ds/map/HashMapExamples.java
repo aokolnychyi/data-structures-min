@@ -1,6 +1,4 @@
-package com.aokolnychyi.ds.examples;
-
-import com.aokolnychyi.ds.map.HashMap;
+package com.aokolnychyi.ds.map;
 
 public class HashMapExamples {
 

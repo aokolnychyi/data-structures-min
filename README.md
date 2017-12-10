@@ -386,6 +386,10 @@ See examples in the corresponding packages.
 #### Notes
 
 - Red-Black Trees can be also implemented in a purely functional manner.
+- Scala provides implementations of immutable sets and maps that use a red-black tree internally.
+Access them under the names ``TreeSet`` and ``TreeMap``.
+- Red-black trees are the standard implementation of ``SortedSet`` in Scala, because they provide
+an efficient iterator that returns all elements in sorted order ([source](http://docs.scala-lang.org/overviews/collections/concrete-immutable-collection-classes.html))
 - BST implementations usually really on implicits.
 
 #### Implementation
@@ -408,50 +412,58 @@ is implemented by ``Leaf``, ``Empty``, ``Node``. The following methods are suppo
 This chapter covers the concept of prefix trees (aka tries), which have the following
 properties:
 
-- Useful when dealing with a set of words to perform some queries.
-- Trie is an efficient information retrieval data structure. Using a trie, search complexities can
+- A prefix tree (or trie) is a tree whose nodes don't hold keys, but rather, hold partial keys.
+For example, if you have a prefix tree that stores strings, then each node would be a character
+of a string. If you have a prefix tree that stores arrays, each node would be an element of
+that array ([source](https://www.quora.com/What-is-the-difference-between-a-tree-a-prefix-tree-and-a-radix-tree)).
+- Prefix trees are not limited to strings but are incredibly useful to deal with a set of words
+that form a certain vocabulary. Usage of a prefix tree can speed up some queries on that vocabulary (e.g., pattern matching). 
+- Trie is an efficient information retrieval data structure. Using a trie to store strings, search complexities can
 be brought to optimal limit (key length). If we store keys in a binary search tree, a well
 balanced BST will need time proportional to M * log N, where M is the maximum string length and
 N is the number of keys in the tree. Using a trie, we can search the key in O(M) time. However, a
-penalty is on trie storage requirements (for each character there is a separate node). In BST,
+penalty is on the trie storage requirements (for each character there is a separate node). In BST,
 you will need to create nodes for each string not char. The construction of a BST will
 take O(numberOfWords^2 * lengthOfWord) time in the worst case and
 O(numberOfWords * log (numberOfWords) * lengthOfWord) in the best case
 ([source](http://www.geeksforgeeks.org/trie-insert-and-search/)).
-- Looking up data in a trie is faster in the worst case, O(m) time (where m is the length of a
-search string), compared to an imperfect hash table. An imperfect hash table can have key
+- Looking up data in a trie is faster in the worst case, O(m) time (where m is the length of a string to search),
+compared to an imperfect hash table. An imperfect hash table can have key
 collisions. The worst-case lookup speed in an imperfect hash table is O(N) time, but far more
 typically is O(1), with O(m) time spent evaluating the hash
 ([source](http://old-www.cs.dartmouth.edu/~cs50/data/tse-output/wikipedia/depth2/8)).
 - Compressed tries are tries that collapse non-branching paths into a single edge. Compressed tries
 have O(numberOfElements) space complexity since they get rid of all non-branching nodes.
-- A suffix tree is a compressed trie which has O(textLength) space complexity.
+- A suffix tree is a compressed trie which contains all the suffixes of a given text.
+- A radix tree is a compressed version of a trie. In a trie, on each edge you write a single letter,
+while in a Patricia tree (a version of a radix tree) you store whole words (see [here](https://stackoverflow.com/questions/14708134/what-is-the-difference-between-trie-and-radix-trie-data-structures)).
 - You have multiple options if you want to solve the "Exact Patter Matching" problem, where
-you are given a text and a pattern to search within that text. A brute force solution is to
-iterate through the text and try the pattern at each position. This will take
-O(lengthOfText * lengthOfPattern) time because you will try to match lengthOfText times and each
-time it might take up to lengthOfPattern of comparisons. In case of a lot of patterns, the time
-complexity will become O(lengthOfText * totalLengthOfPatterns). Obviously, this will be a
-big problem if you have a lot of patterns to match. However, the approach does not use any
-additional memory. The problem with the naive solution is that you try each pattern one by one.
-While you are trying one pattern, the remaining ones are waiting. So, you can try to build a
-trie of patterns. Then, at each point in the text, you can try to walk through the constructed
-trie to find matches. The runtime of this approach is O(lengthOfText * lengthOfLongestPattern)
-since you will iterate through the trie lengthOfText times and each time you can do up to
-lengthOfLongestPattern comparisons. You also should take into account that the construction also
-takes some time. So, the insertion time of a word into a trie takes O(wordLength). You will
-need to do O(numberOfPatterns) insertions. Overall, the construction will take
-O(totalLengthOfPatterns). Moreover, this approach uses O(totalLengthOfPatterns) addition space.
-Instead of packing all patterns into a trie, we can form a trie out of all suffixes of our text.
-Then we can check each pattern if it can be spelled out from the root downward in the trie of
-suffixes. There is a problem: you need to identify where you matches are located in the given text.
-For that reason, you need to attach some information to leaves or nodes. To form a trie of suffixes
-you need to process O(lengthOfText) suffixes. On average, each of them will be O(lengthOfText/2).
-The time complexity to construct the trie is O(numberOfSuffixes * lengthOfSuffixes) =
-O(lengthOfText * (lengthOfText/2)) = O(lengthOfText^2). The time complexity of looking up
-patterns is O(numberOfPatterns * lengthOfLongestPattern).
-The memory footprint is O(lengthOfText^2). This value might be smaller or bigger than
-O(totalLengthOfPatterns). It depends on circumstances. 
+you are given a text and a pattern to search within that text.
+    - A brute force solution is to iterate through the text and try the pattern at each position.
+     This will take O(lengthOfText * lengthOfPattern) time because you will try to match
+     lengthOfText times and each time it might take up to lengthOfPattern of comparisons.
+     In case of a lot of patterns, the time complexity will become O(lengthOfText * totalLengthOfPatterns).
+     Obviously, this will be a big problem if you have a lot of patterns to match. However, the
+     approach does not use any additional memory.
+    - The problem with the naive solution is that you try each pattern one by one.
+    While you are trying one pattern, the remaining ones are waiting. So, you can try to build a
+    trie of patterns. Then, at each point in the text, you can try to walk through the constructed
+    trie to find matches. The runtime of this approach is O(lengthOfText * lengthOfLongestPattern)
+    since you will iterate through the trie lengthOfText times and each time you can do up to
+    lengthOfLongestPattern comparisons. You should take into account that the construction also
+    takes some time. So, the insertion time of a word into a trie takes O(wordLength). You will
+    need to do O(numberOfPatterns) insertions. Overall, the construction will take
+    O(totalLengthOfPatterns). Moreover, this approach uses O(totalLengthOfPatterns) addition space.
+    - Instead of packing all patterns into a trie, we can form a trie out of all suffixes of our text.
+    Then we can check each pattern if it can be spelled out from the root downward in the trie of
+    suffixes. There is a problem: you need to identify where you matches are located in the given text.
+    For that reason, you need to attach some information to leaves or nodes. To form a trie of suffixes
+    you need to process O(lengthOfText) suffixes. On average, each of them will be O(lengthOfText/2).
+    The time complexity to construct the trie is O(numberOfSuffixes * lengthOfSuffixes) =
+    O(lengthOfText * (lengthOfText/2)) = O(lengthOfText^2). The time complexity of looking up
+    patterns is O(numberOfPatterns * lengthOfLongestPattern).
+    The memory footprint is O(lengthOfText^2). This value might be smaller or bigger than
+    O(totalLengthOfPatterns). It depends on circumstances. 
 
 | Algorithm             | Time                                                                | Additional Space         |
 | --------------------- | ------------------------------------------------------------------- | ------------------------ |
@@ -475,7 +487,7 @@ can be built in linear time.
 
 ### Prefix Tree in Java
 
-#### Notes
+#### Notes (implementation-specific)
 
 - You can also expose the root node if you want to efficiently iterate in some cases. Otherwise,
 using a wrapper might be better.
@@ -505,13 +517,18 @@ See examples in ``com.aokolnychyi.ds.trie.CaseSensitiveTrieExamples`` and
 
 ### Prefix Tree in Scala
 
+#### Notes
+
+- Scala uses tries in many places. For instance, ``immutable.HashMap`` is a hash trie and
+``Vector`` is a bit mapped vector trie.
+
 #### Implementation
 
-This repo also contains an immutable prefix tree implementation in Scala. It can be
-found in ``com.aokolnychyi.ds.trie.PrefixTree`` and features the following methods:
+This repo also contains an immutable prefix tree implementation to work with strings.
+It can be found in ``com.aokolnychyi.ds.trie.PrefixTree`` and features the following methods:
 
 - Add a word (``PrefixTree#+``)
-- Check if a word contains in a prefix tree (``PrefixTree#contains``)
+- Check if a prefix tree contains a word (``PrefixTree#contains``)
 
 Under the hood, the work is delegated to the root node, which is defined
 in the ``com.aokolnychyi.ds.trie.PrefixTreeNode`` trait with concrete implementations in
@@ -521,8 +538,206 @@ the existing branches that do not change.
 
 See examples in ``com.aokolnychyi.ds.trie.ScalaPrefixTreeExamples``.
 
+## Hash Map
+
+- Hash Maps is one way to implement dictionaries. Other methods include direct access tables,
+BST-based approaches, hash tries.
+- You can use direct access tables whenever you have integer keys and the key universe is not big.
+It is based on an array where each slot corresponds to a value. The main drawback of this approach
+is that it is not applicable when you have a large universe of keys. Furthermore, the set of actual
+keys might be much smaller than the universe (as a result, too much used space without any purpose).
+In that case, hashing works way better. We can reduce the storage requirement to O(keys).
+However, direct access tables operate strictly in O(1) time, whereas hashing gives us O(1) only
+on average due to possible collisions. Another advantage of direct access tables is limited amount
+of garbage since it does not allocate any internal objects (like Hash Maps).
+
+### Hash Maps in Java
+
+#### Notes
+
+- [This post](https://stackoverflow.com/questions/2889777/difference-between-hashmap-linkedhashmap-and-treemap)
+describes differences between various implementations of the ``Map`` interface in Java. Shortly
+speaking, ``HashMap`` does not provide any guarantees regarding the iteration order; in ``TreeMap``
+the keys are sorted according to their natural order or a comparator; ``LinkedHashMap`` can keep
+the insertion or access order; ``Hashtable`` is an obsolete synchronized ``Map`` implementation,
+which should be replaced with ``ConcurrentHashMap``. 
+- [This post](http://javarevisited.blogspot.de/2011/04/difference-between-concurrenthashmap.html) 
+compares different ways to have thread-safe maps in Java. Shortly speaking, ``ConcurrentHashMap``,
+``Hashtable``, ``Collections.synchronizedMap()`` will give you thread-safe maps. ``Hashtable``
+is a legacy class from JDK 1.1, which uses synchronized methods to achieve thread-safety. All
+methods of ``Hashtable`` are synchronized which makes them quite slow due to contention
+if a number of thread increases. Synchronized Map is also not very different than ``Hashtable``
+and provides similar performance in concurrent Java programs. The only difference between
+``Hashtable`` and Synchronized Map is that later is not a legacy and you can wrap any ``Map``
+to create it's synchronized version by using ``Collections.synchronizedMap()`` method.
+On the other hand, ``ConcurrentHashMap`` is specially designed for concurrent use
+(i.e. more than one thread). By default, it allows 16 threads to simultaneously read and write
+without any external synchronization. It is also very scalable because of the stripped locking
+technique used in the internal implementation of the ``ConcurrentHashMap`` class.
+Unlike ``Hashtable`` and Synchronized Map, it never locks whole map. Instead, it divides the map
+into segments and locks each segment independently.
+- ``HashSet`` in Java is built on top of ``HashMap`` by using a dummy object as a value.
+- Other maps in Java include ``EnumMap`` (optimized for enum constants as keys),
+``WeakHashMap``(useful for creating a GC friendly cache, where values become eligible for garbage
+collection as soon as there is no other reference to them apart from the keys in ``WeakHashMap``),
+``IdentityHashMap`` (uses identity instead of equality for comparing keys).
+- ``NavigableMap`` was introduced in Java 1.6 to add navigation capabilities to the map data
+structure. It provides methods like ``lowerKey()`` to get keys which are less than the specified
+key, etc.
+- For inserting, deleting, and locating elements in, ``HashMap`` offers the best alternative.
+If, however, you need to traverse the keys in a sorted order, then ``TreeMap`` is your
+better alternative. Depending upon the size of your collection, it may be faster to add
+elements to ``HashMap`` and then convert it to ``TreeMap`` for a sorted key traversal
+("Cracking the coding interview").
+- Although searching for an element in a hash table can take as long as searching for an element in
+a linked list (i.e., O(n) time in the worst case) - in practice, hashing performs extremely well.
+Under reasonable assumptions, the average time to search for an element in a hash table is O(1)
+([source](https://www.cs.nmsu.edu/~ipivkina/Spring08cs372/Cormen/chapter12HashTables.htm)).
+- There are different techniques that allow us to handle collisions. The first one is chaining.
+Here you simply add all collisions to the linked list (or a BST). Another concept is
+open-addressing, where you do not have any lists, each value occupy one slot. On each insertion
+we probe our hash table until we find an empty slot. In this case, our hash function should
+give us a sequence of positions which we check. But deletion is complex. You cannot just
+simply delete an element, since this can prevent us from retrieving some other values for which
+we probed this slot during the insertion. There are, in turn, several probing techniques.
+The simplest one is to try each next bucket(cell). The more efficient one is to use two
+hash function. The first one is primary, and in case of a collision you add
+``probeNumber * secondaryHashFunction``.
+- One can try to come up with bad keys for a given hash function if it is known upfront. 
+That’s why you can try to decide on the hash function randomly. This is called universal caching.
+You select it at the beginning randomly. Universal hashing algorithms do not use randomness when
+calculating a hash for a key. Random numbers are only used during the initialization of
+the hash table to choose a hash function from a family of hash functions. This prevents
+an adversary with access to the details of the hash function from devising a worst case set of keys.
+In other words, during the lifetime of the hash table, the bucket for a given key is
+consistent. However, a different instance (such as next time the program runs) may place that
+same key in a different bucket ([source](https://stackoverflow.com/questions/10416404/finding-items-in-an-universal-hash-table)).
+- There are different techniques to identify the bucket based on hash. The simplest is to take
+the remainder of the hash. This does work well in every case. What if the number of buckets
+is dividable by 2 and we have the hash function that always produces even numbers?
+Then we will have only half used.
+- Java's ``HashMap`` internally stores mapping in the form of ``Map.Entry`` object, which contains
+both key and value objects. Whenever you add a key-value pair, the following happens:
+    - If key is null, then it will be stored at ``table[0]`` because the hashcode for ``null`` is always 0.
+    - The hash of the key is calculated and passed to the internal ``hash()`` function.
+    Its purpose is to fix bad hash functions that produce values with the same lower bits, which is
+    very bad for ``HashMap`` in Java. You can find a detailed explanation [here](https://www.java2blog.com/hash-and-indexfor-method-in-hashmap/).
+    This step is critical because ``HashMap`` uses power-of-two length hash tables, that
+    would encounter collisions for hashCodes that do not differ in lower bits.
+    - Next, the fixed hash is passed to ``indexFor(hash, table.length)``, which calculates
+    the exact index in the table array for storing the corresponding ``Entry`` object. Under the hood,
+    it calls ``h & (length - 1)`` to determine the bucket.
+    - If there is no existing element, we just put the key-value pair there.
+    - If there is a collision, we need to handle it with a linked list or BST.
+- ``HashMap`` has an inner class called ``Entry`` which stores key-value pairs. In addition,
+there is an array of ``Entry`` objects called ``table``. An index of table is logically known as a
+bucket and stores the first element of a linked list or the root node of a BST.
+- In the worst case, reading from an instance of ``HashMap`` can take O(n) time. To fix this,
+Java 8 uses balanced trees instead of linked lists once a certain threshold is reached.
+This means ``HashMap`` starts with storing ``Entry`` objects in linked lists but after the number
+of collisions becomes larger than a certain threshold, ``HashMap`` will switch balanced trees to
+improve the worst case performance from O(n) to O(log n). See more info [here](https://stackoverflow.com/questions/35888183/why-hash-maps-in-java-8-use-binary-tree-instead-of-linked-list).
+- An instance of ``HashMap`` has two parameters that affect its performance: initial capacity
+(16 by default) and load factor. The capacity is the number of buckets in the hash table,
+and the initial capacity is simply the capacity at the time the hash table is created.
+The load factor is a measure of how full the hash table is allowed to get before its capacity
+is automatically increased. When the number of entries in the hash table exceeds the 
+product of the load factor and the current capacity, the hash table is rehashed (that is, 
+internal data structures are rebuilt) so that the hash table has approximately
+twice the number of buckets ([source](https://stackoverflow.com/questions/10901752/what-is-the-significance-of-load-factor-in-hashmap)).
+- As a general rule, the default load factor (.75) offers a good trade-off between time and
+space costs. Higher values decrease the space overhead but increase the lookup cost
+(reflected in most of the operations of the ``HashMap`` class, including get and put).
+The expected number of entries in the map and its load factor should be taken into account
+when setting its initial capacity, so as to minimize the number of rehash operations.
+If the initial capacity is greater than the maximum number of entries divided by the load factor,
+no rehash operations will ever occur ([source](https://stackoverflow.com/questions/10901752/what-is-the-significance-of-load-factor-in-hashmap)).
+
+#### Implementation
+
+This repo contains a simple map implementation in ``com.aokolnychyi.ds.map.HashMap``, which uses
+chaining with the help of BSTs to handle collisions. The following methods are supported:
+
+- Add a key-value pair (``HashMap#put``)
+- Get a value for a key (``HashMap#get``)
+
+Note that the implementation does not use a balanced version of BSTs (e.g., AVL, Red-Black)
+for simplicity. However, it also affects the performance.
+
+See examples in ``com.aokolnychyi.ds.map.HashMapExamples``.
+
+### Hash Maps in Scala
+
+#### Notes 
+
+- Scala has a lot of map implementations to choose from. If you’re looking for a basic map class,
+where sorting or insertion order does not matter, you can either choose the default, ``immutable.Map``,
+or import ``mutable.Map``. If you want a map that returns its elements in sorted order by keys,
+use ``SortedMap``. If you want a map that remembers the insertion order of its elements,
+use ``LinkedHashMap`` or ``ListMap``. Scala only has mutable ``LinkedHashMap``, and it returns
+its elements in the order you inserted them (or access order). Scala has both mutable
+and immutable ``ListMap`` classes. They return elements in the opposite order in which you
+inserted them, as though each insert was at the head of the map. ``LinkedHashMap`` implements
+a mutable map using a hashtable, whereas ``ListMap`` is backed by a list-based data structure
+([source](https://alvinalexander.com/scala/how-to-choose-map-implementation-class-sorted-scala-cookbook)).
+- ``immutable.Map`` is a trait for immutable maps while ``immutable.HashMap`` is a concrete
+implementation. Creating ``Map()`` or ``Map.empty`` gives a special empty singleton map,
+``Map(a -> b)`` with up to 5 elements gives specialized classes for such small maps,
+``Map(a -> b)`` with 5 and more key-value pairs gives you ``immutable.HashMap``.
+- Hash tries are a standard way to implement immutable sets and maps efficiently. They are
+supported by ``immutable.HashMap``. Their representation is similar to ``Vector`` in that they
+are also trees where every node has 32 elements or 32 subtrees. But the selection of these
+keys is now done based on hash code. For instance, to find a given key in a map, one first
+takes the hash code of the key. Then, the lowest 5 bits of the hash code are used to select
+the first subtree, followed by the next 5 bits and so on. The selection stops once all elements
+stored in a node have hash codes that differ from each other in the bits that are selected
+up to this level ([source](http://docs.scala-lang.org/overviews/collections/concrete-immutable-collection-classes.html#hash_tries)).
+- Hash tries strike a nice balance between reasonably fast lookups and reasonably efficient
+functional insertions (+) and deletions (-). That’s why they underly Scala’s default
+implementations of immutable maps and sets. In fact, Scala has a further optimization for
+immutable sets and maps that contain less than five elements. Sets and maps with one to four 
+elements are stored as single objects that just contain the elements (or key/value pairs 
+in the case of a map) as fields. The empty immutable set and the empty immutable map is
+in each case a single object - there’s no need to duplicate storage for those because an
+empty immutable set or map will always stay empty ([source](http://docs.scala-lang.org/overviews/collections/concrete-immutable-collection-classes.html#hash_tries)).
+- ``ListMap`` represents a map as a linked list of key-value pairs. In general, operations
+on a list map might have to iterate through the entire list. Thus, operations on a list map
+take time linear in the size of the map. In fact there is little usage for list maps in
+Scala because standard immutable maps are almost always faster. The only possible exception
+to this is if the map is for some reason constructed in such a way that the first elements
+in the list are selected much more often than the other elements ([source](http://docs.scala-lang.org/overviews/collections/concrete-immutable-collection-classes.html)).
+- The calculation of the hash code in case classes is delegated to ``ScalaRunTime._hashCode``
+and the equality depends on the equality of the case class' members. As of scala 2.9,
+hashCode for case classes uses MurmurHash, which has a very good avalanche effect.
+In cryptography, the avalanche effect is the desirable property of cryptographic algorithms,
+typically block ciphers and cryptographic hash functions, wherein if an input is changed
+slightly (for example, flipping a single bit), the output changes significantly
+(e.g., half the output bits flip) ([source](https://en.wikipedia.org/wiki/Avalanche_effect)).
+- Note that built-in hash-based classes in Scala use the synthetic function ``##`` instead of the
+plain ``hashCode``.
+
+#### Implementation
+
+This repo contains a simplified copy of the built-in ``immutable.HashTable`` class
+in the ``com.aokolnychyi.ds.map.scalaHashMap`` file. The implementation is also based
+on the concept of hash tries. ``com.aokolnychyi.ds.map.ScalaHashMap`` is the base class
+that also acts as an empty map.
+
+``com.aokolnychyi.ds.map.ScalaHashMap`` is extended by ``SingleEntryHashMap``
+(holds only one key-value pair), ``CollisionHashMap`` (holds multiple key-value pairs but all
+with the same cache), ``HashTrieMap`` (represents hash maps using the trie data structure).
+Refer to the comments in the code for more details.
+
+See examples in ``com.aokolnychyi.ds.map.ScalaHashMapExamples``.
+
 ## Vectors
 
+- Scala ``Vector`` and ``immutable.HashMap`` have some similarities but are fundamentally
+different data structures. There is no hashing involved in ``Vector``. The index
+directly describes the path into the tree. And of course, the occupied indices of a vector are consecutive.
+In ``HashTrieMap``, the hash code is the path into the tree. That means that the occupied indices
+are not consecutive, but evenly distributed. This requires a different encoding of the tree branch
+nodes ([source](https://stackoverflow.com/a/37186663/4108401)).
 - Bitmapped Vector Trie is a combination of associative and sequential data type since it preserves
 the insertion order and provides fast access to head/tail/middle elements. It is a functional
 analog to java.util.ArrayList. You append/prepend and update at nth
@@ -596,19 +811,19 @@ a sequence type as a variable argument sequence, i.e. varargs. In other words, `
 special notation that tells the compiler to pass each element as its own argument, 
 rather than all of it as a single argument.
 - Case and top-level classes cannot be implicit.
+- If you are designing a Java class that should work only with mutually comparable elements,
+you can apply type bounds. One way to achieve this is to specify them per class
+(i.e., ``public class MyClass<T extends Comparable<T>>``). On the other hand,
+we can rely on an external ``Comparator``. If it is null, then we try to cast the array/elements
+in our data structure to ``Comparable``s. The first approach is more safe and strict since
+it does all verifications at compile-time. However, the second approach gives more flexibility
+but might have cause ``ClassCastException``s.
+- Java ``Arrays.asList`` returns a fixed-size list backed by the specified array.
+You can't add to it, you can't remove from it, you can't structurally modify the list since you
+will get an ``UnsupportedOperationException``.
+
 
 Hash Maps
 
-https://alvinalexander.com/scala/how-to-choose-map-implementation-class-sorted-scala-cookbook
 http://docs.scala-lang.org/overviews/collections/concrete-immutable-collection-classes.html#hash_tries
-https://stackoverflow.com/questions/31685236/scala-map-vs-hashmap
-https://alvinalexander.com/scala/how-to-choose-map-implementation-class-sorted-scala-cookbook
 http://javarevisited.blogspot.de/2016/01/how-does-java-hashmap-or-linkedhahsmap-handles.html
-https://stackoverflow.com/questions/4980757/how-do-hashtables-deal-with-collisions
-
-Trie
-
-https://www.google.de/search?q=radix+tree+vs+trie&oq=radix+tree&aqs=chrome.1.69i57j0j69i60l3j0.6646j0j7&sourceid=chrome&ie=UTF-8
-https://en.wikipedia.org/wiki/Hash_array_mapped_trie
-https://blog.acolyer.org/2015/11/27/hamt/
-https://stackoverflow.com/questions/14708134/what-is-the-difference-between-trie-and-radix-trie-data-structures
