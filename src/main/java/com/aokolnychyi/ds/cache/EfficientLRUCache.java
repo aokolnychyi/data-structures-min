@@ -6,19 +6,18 @@ import java.util.Map;
 public class EfficientLRUCache<K, V> {
 
   private final Map<K, Node> keyNodeMap;
-  private final int maxSize;
+  private final int maxCapacity;
   // The left-most node
   private Node leastRecentlyUsedNode;
   // The right-most node
   private Node mostRecentlyUsedNode;
 
-  public EfficientLRUCache(int maxSize) {
-    keyNodeMap = new HashMap<>();
-    leastRecentlyUsedNode = new Node();
-    mostRecentlyUsedNode = leastRecentlyUsedNode;
-    this.maxSize = maxSize;
+  public EfficientLRUCache(int initialCapacity, int maxCapacity) {
+    keyNodeMap = new HashMap<>(initialCapacity);
+    this.maxCapacity = maxCapacity;
   }
 
+  // O(1) time if no collisions
   public V get(K key) {
     final Node node = keyNodeMap.get(key);
     // no such element
@@ -27,7 +26,7 @@ public class EfficientLRUCache<K, V> {
     }
 
     // if it is the most recently used
-    if (node.key.equals(mostRecentlyUsedNode.key)) {
+    if (node == mostRecentlyUsedNode) {
       return mostRecentlyUsedNode.value;
     }
 
@@ -35,7 +34,7 @@ public class EfficientLRUCache<K, V> {
     final Node previousNode = node.previousNode;
 
     // if at the left-most, update the least recently used item
-    if (node.key.equals(leastRecentlyUsedNode.key)) {
+    if (node == leastRecentlyUsedNode) {
       nextNode.previousNode = null;
       leastRecentlyUsedNode = nextNode;
     } else {
@@ -53,55 +52,58 @@ public class EfficientLRUCache<K, V> {
     return node.value;
   }
 
+  // O(1) time if no collisions
   public void add(K key, V value) {
-    final Node existingNode = keyNodeMap.get(key);
-    if (existingNode != null && existingNode.value.equals(value)) {
-      return;
-    } else if (existingNode != null && !existingNode.value.equals(value)) {
-      existingNode.value = value;
-      return;
+    if (keyNodeMap.containsKey(key)) {
+      remove(key);
     }
 
     // put the new node at the right-most end of the linked list
-    final int currentSize = keyNodeMap.size();
     final Node newNode = new Node(mostRecentlyUsedNode, null, key, value);
-    mostRecentlyUsedNode.nextNode = newNode;
     keyNodeMap.put(key, newNode);
+    final int currentSize = keyNodeMap.size();
+
+    // if the cache contains only element now
+    if (currentSize == 1) {
+      mostRecentlyUsedNode = newNode;
+      leastRecentlyUsedNode = newNode;
+      return;
+    }
+
+    mostRecentlyUsedNode.nextNode = newNode;
     mostRecentlyUsedNode = newNode;
 
     // delete the left-most pointer if the size exceeds the threshold
-    if (currentSize == maxSize) {
+    if (currentSize > maxCapacity) {
       // Important! Do not forget to remove from the map!
       keyNodeMap.remove(leastRecentlyUsedNode.key);
       leastRecentlyUsedNode = leastRecentlyUsedNode.nextNode;
-      if (leastRecentlyUsedNode != null) {
-        leastRecentlyUsedNode.previousNode = null;
-      }
-    } else if (currentSize == 0) {
-      leastRecentlyUsedNode = newNode;
+      leastRecentlyUsedNode.previousNode = null;
     }
   }
 
+  // O(1) time if no collisions
   public void remove(K key) {
-    final Node removedValue = keyNodeMap.remove(key);
-    final boolean isRemovalSuccessful = removedValue != null;
+    final Node removedNode = keyNodeMap.remove(key);
+    final boolean isRemovalFromMapSuccessful = removedNode != null;
 
-    if (isRemovalSuccessful) {
-      if (key.equals(mostRecentlyUsedNode.key)) {
+    if (isRemovalFromMapSuccessful) {
+      if (removedNode == mostRecentlyUsedNode) {
         mostRecentlyUsedNode = mostRecentlyUsedNode.previousNode;
         if (mostRecentlyUsedNode != null) {
           mostRecentlyUsedNode.nextNode = null;
         }
-      } else if (key.equals(leastRecentlyUsedNode.key)) {
-        leastRecentlyUsedNode = leastRecentlyUsedNode.nextNode;
-        if (leastRecentlyUsedNode != null) {
-          leastRecentlyUsedNode.previousNode = null;
+        // handle the case with only 1 element
+        if (keyNodeMap.isEmpty()) {
+          leastRecentlyUsedNode = null;
         }
+      } else if (removedNode == leastRecentlyUsedNode) {
+        leastRecentlyUsedNode = leastRecentlyUsedNode.nextNode;
+        leastRecentlyUsedNode.previousNode = null;
       } else {
         // middle
-        final Node nextNode = removedValue.nextNode;
-        final Node previousNode = removedValue.previousNode;
-
+        final Node nextNode = removedNode.nextNode;
+        final Node previousNode = removedNode.previousNode;
         previousNode.nextNode = nextNode;
         nextNode.previousNode = previousNode;
       }

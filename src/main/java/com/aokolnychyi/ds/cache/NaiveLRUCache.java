@@ -10,14 +10,15 @@ public class NaiveLRUCache<K, V> {
 
   private final Map<TimedKey, V> map = new HashMap<>();
   private final int maxSize;
-  private Comparator<TimedKey> timedKeyComparator = (key, anotherKey) ->
-      (int) (key.timestamp - anotherKey.timestamp);
+  // there might be overflow and it is not safe to cast long to int
+  private Comparator<TimedKey> timedKeyComparator =
+      (key, anotherKey) -> (int) (key.timestamp - anotherKey.timestamp);
 
   public NaiveLRUCache(int maxSize) {
     this.maxSize = maxSize;
   }
 
-  // O(1)
+  // O(1) time if there is no collision
   public V get(K key) {
     TimedKey timedKey = new TimedKey(key, System.nanoTime());
     V value = map.get(timedKey);
@@ -30,7 +31,7 @@ public class NaiveLRUCache<K, V> {
 
   // O(n)
   public void put(K key, V value) {
-    TimedKey timedKey = new TimedKey(key, System.currentTimeMillis());
+    TimedKey timedKey = new TimedKey(key, System.nanoTime());
     map.remove(timedKey);
     final int currentSize = map.size();
     if (currentSize == maxSize) {

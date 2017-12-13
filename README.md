@@ -730,6 +730,57 @@ Refer to the comments in the code for more details.
 
 See examples in ``com.aokolnychyi.ds.map.ScalaHashMapExamples``.
 
+## LRU Cache
+
+This chapter is about the Least Recently Used Cache.
+
+- LRU Cache is a cache that, when low on memory, evicts least recently used items ([source](http://openmymind.net/Writing-An-LRU-Cache/)).
+
+### LRU Cache in Java
+
+#### Notes
+
+- ``LinkedHashMap`` can be used as a LRU Cache in Java (see an example later).
+
+#### Implementation
+
+This repo contains five LRU Cache implementations.
+
+The first one is based on a hash map, where a key is wrapped into a class called
+``TimedKey``. In addition to the key, this class also holds the timestamp when each key is added,
+so you can evict the least recently used item. The important point is that ``TimedKey``
+completely ignores its timestamp in ``equals()`` and ``hashCode()``. This implementation
+features on average O(1) time to get a value and O(n) time to add a key-value pair.
+In the worst case, both methods will take O(n) time (if there are collisions). See more in
+``com.aokolnychyi.ds.cache.NaiveLRUCache`` and ``com.aokolnychyi.ds.cache.NaiveLRUCacheExamples``.
+
+The second approach relies on a hash map of keys/values and a linked list of keys, where the first
+element is the most recently used item. It has a very clear concept behind but runs in
+O(n) time for all operations. See details in ``com.aokolnychyi.ds.cache.LRUCache``
+and ``com.aokolnychyi.ds.cache.LRUCacheExamples``.
+
+The third implementation is still based on a separate class to hold keys. However, this time it is
+``TreeSet`` that is implemented as a Red-Black Tree. Therefore, the operations take O(log n) time.
+Probably, the trickiest implementation in this repo and is available in
+``com.aokolnychyi.ds.cache.TreeSetLRUCache`` with examples in ``com.aokolnychyi.ds.cache.TreeSetLRUCacheExamples``.
+
+The fourth approach is the most efficient custom implementation in this repo and runs in O(1) time
+for all operations. It is built on top of a hash map, where values are also nodes that
+form a linked list. The list represents the access order. To simplify the implementation, there
+are head and tail nodes stored separately. The head of the list is the least recently used item.
+See details in ``com.aokolnychyi.ds.cache.EfficientLRUCache`` with examples in
+``com.aokolnychyi.ds.cache.EfficientLRUCacheExamples``.
+
+The fifth implementation is based on the built-in ``LinkedHashMap`` in Java. See more in
+``com.aokolnychyi.ds.cache.LinkedHashMapLRUCache`` and ``com.aokolnychyi.ds.cache.LinkedHashMapLRUCacheExamples``.
+
+### LRU Cache in Scala
+
+#### Notes
+
+- There is no built-in class for LRU Cache in Scala. ``mutable.LinkedHashMap`` does not support eviction
+based on the access order. There are many libraries that provide this.
+
 ## Vectors
 
 - Scala ``Vector`` and ``immutable.HashMap`` have some similarities but are fundamentally
@@ -821,9 +872,3 @@ but might have cause ``ClassCastException``s.
 - Java ``Arrays.asList`` returns a fixed-size list backed by the specified array.
 You can't add to it, you can't remove from it, you can't structurally modify the list since you
 will get an ``UnsupportedOperationException``.
-
-
-Hash Maps
-
-http://docs.scala-lang.org/overviews/collections/concrete-immutable-collection-classes.html#hash_tries
-http://javarevisited.blogspot.de/2016/01/how-does-java-hashmap-or-linkedhahsmap-handles.html

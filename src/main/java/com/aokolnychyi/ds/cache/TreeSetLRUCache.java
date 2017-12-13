@@ -1,6 +1,5 @@
 package com.aokolnychyi.ds.cache;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.TreeSet;
@@ -15,33 +14,38 @@ public class TreeSetLRUCache<K, V> {
     this.maxSize = maxSize;
   }
 
+  // O(log n) time
   public V get(K key) {
     final TimedValue timedValue = keyValueMap.get(key);
     if (timedValue != null) {
-      final Date lastAccessDate = new Date();
-      final TimedKey timedKey = new TimedKey(key, timedValue.time);
-      markAsMostRecentlyUsed(timedKey, lastAccessDate);
-      timedValue.time = lastAccessDate;
+      final long newAccessTimestamp = System.nanoTime();
+      final long oldAccessTimestamp = timedValue.timestamp;
+      markAsMostRecentlyUsed(key, oldAccessTimestamp, newAccessTimestamp);
+      timedValue.timestamp = newAccessTimestamp;
     }
     return timedValue != null ? timedValue.value : null;
   }
 
-  private void markAsMostRecentlyUsed(TimedKey oldTimedKey, Date lastAccessDate) {
+  // O(log n) time
+  private void markAsMostRecentlyUsed(K key, long oldAccessTimestamp, long newAccessTimestamp) {
+    final TimedKey oldTimedKey = new TimedKey(key, oldAccessTimestamp);
     timeKeySet.remove(oldTimedKey);
-    final TimedKey newTimedKey = new TimedKey(oldTimedKey.key, lastAccessDate);
+    final TimedKey newTimedKey = new TimedKey(oldTimedKey.key, newAccessTimestamp);
     timeKeySet.add(newTimedKey);
   }
 
+  // O(log n) time
   public boolean remove(K key) {
     final TimedValue removedValue = keyValueMap.remove(key);
     final boolean isRemovalSuccessful = removedValue != null;
     if (isRemovalSuccessful) {
-      final TimedKey timedKey = new TimedKey(key, removedValue.time);
+      final TimedKey timedKey = new TimedKey(key, removedValue.timestamp);
       timeKeySet.remove(timedKey);
     }
     return isRemovalSuccessful;
   }
 
+  // O(log n) time
   public void add(K key, V value) {
     // remove if already exists
     remove(key);
@@ -51,14 +55,15 @@ public class TreeSetLRUCache<K, V> {
       removeLeastRecentlyUsed();
     }
 
-    final Date insertDate = new Date();
-    final TimedKey timedKey = new TimedKey(key, insertDate);
-    final TimedValue timedValue = new TimedValue(value, insertDate);
+    final long insertTimestamp = System.nanoTime();
+    final TimedKey timedKey = new TimedKey(key, insertTimestamp);
+    final TimedValue timedValue = new TimedValue(value, insertTimestamp);
 
     keyValueMap.put(key, timedValue);
     timeKeySet.add(timedKey);
   }
 
+  // most likely O(n) but did not find any precision info about TreeSet#pollFirst
   private void removeLeastRecentlyUsed() {
     // tricky, ascending order
     final TimedKey leastRecentlyUsedKey = timeKeySet.pollFirst();
@@ -66,22 +71,23 @@ public class TreeSetLRUCache<K, V> {
   }
 
   private class TimedKey implements Comparable<TimedKey> {
-    // todo what we have in Java 8 for time?
     private final K key;
-    private Date time;
+    private long timestamp;
 
-    private TimedKey(K key, Date time) {
+    private TimedKey(K key, long timestamp) {
       this.key = key;
-      this.time = time;
+      this.timestamp = timestamp;
     }
 
     @Override
     public int compareTo(TimedKey otherTimedKey) {
-      final int timeDifference = time.compareTo(otherTimedKey.time);
+      // might be overflow
+      final long timeDifference = timestamp - otherTimedKey.timestamp;
       final boolean isKeyEquivalent = key.equals(otherTimedKey.key);
       // tricky
       if (timeDifference != 0) {
-        return timeDifference;
+        // it is not safe to cast long to int
+        return (int) timeDifference;
       } else if (isKeyEquivalent) {
         return 0;
       } else {
@@ -94,23 +100,22 @@ public class TreeSetLRUCache<K, V> {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       TimedKey timedKey = (TimedKey) o;
-      return Objects.equals(time, timedKey.time) && Objects.equals(key, timedKey.key);
+      return Objects.equals(timestamp, timedKey.timestamp) && Objects.equals(key, timedKey.key);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(time, key);
+      return Objects.hash(timestamp, key);
     }
   }
 
   private class TimedValue {
-    // todo what we have in Java 8 for time?
     private final V value;
-    private Date time;
+    private long timestamp;
 
-    private TimedValue(V value, Date time) {
+    private TimedValue(V value, long timestamp) {
       this.value = value;
-      this.time = time;
+      this.timestamp = timestamp;
     }
   }
 }
