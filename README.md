@@ -781,7 +781,83 @@ The fifth implementation is based on the built-in ``LinkedHashMap`` in Java. See
 - There is no built-in class for LRU Cache in Scala. ``mutable.LinkedHashMap`` does not support eviction
 based on the access order. There are many libraries that provide this.
 
-## Vectors
+## Graph
+
+This section is about graphs.
+
+- Might be directed or undirected.
+- Might be weighted or unweighted.
+- Maybe sparse (O(n) edges) or dense (O(n^2) edges). A dense graph is a graph in which the number
+of edges is close to the maximal number of edges. A sparse graph is a graph in which the number
+of edges is close to the minimal number of edges ([source](https://stackoverflow.com/a/12599199/4108401)). 
+A complete graph is a graph where each vertex has edges connect it to all other vertices.
+- There are multiple ways how to represent: Adjacency List, Adjacency Matrix, Incidence Matrix.
+- Refer [here](https://stackoverflow.com/questions/2218322/what-is-better-adjacency-lists-or-adjacency-matrices-for-graph-problems-in-c)
+for a comparison between Adjacency List and Adjacency Matrix. Overall, Adjacency List is more space
+efficient in most cases (unless your graph is complete, then the space complexity is equivalent).
+Adjacency List features better complexity for adding a vertex/edge (again, unless you graph is complete).
+However, with Adjacency Matrix you can check if there is an edge between two vertices in constant time.
+- Adjacency List allows you to store additional info with vertices (state).  Adjacency Matrix
+require you to store data on edges and vertices externally. Only the cost for one edge can be stored
+between each pair of vertices.
+- Adjacency Matrix is slow to add or remove vertices, because the matrix must be resized/copied.
+- The third way to represent a graph is Incidence Matrix. It is very slow for adding/removing of
+both edges and vertices (Adjacency Matrix is slow only for adding/removing vertices). Check out
+[here](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)) for a nice comparison.
+- If for two vertices A and B have an edge E joining them, we say that A and B are adjacent.
+- If two edges E1 and E2 have a common vertex A, the edges are called incident.
+- The complexity of BFS based on Adjacency Matrix will be O(V^2) as compared to O(V + E) using Adjacency List.
+In Adjacency List, each vertex is enqueued and dequeued at most once. Scanning for all adjacent vertices
+takes O(E) time since the sum of lengths of all adjacency lists is E. Hence, the time complexity of
+BFS Gives O(V+E) time complexity.
+- In DFS, you will explore each node and its neighbors exactly once. The time complexity to explore
+each node is O(1) while exploring its neighbors is O(# connected vertices). The overall time complexity
+is O(SumForAllVertices(1 + # connected vertices)), which is equal to O(V + E).
+- Keep in mind one subtle difference in BFS implementations in trees and graphs.
+
+### Graph in Java
+
+#### Notes
+
+- In Adjacency Matrix implementations you have to deal with generic array creation.
+- To keep track of visited vertices, you can have a set of vertices or just maintain some state for
+each vertex.
+
+#### Implementation
+
+This repo contains five graph implementations.
+
+``com.aokolnychyi.ds.graph.UniqueVerticesALGraph`` is based on two separate lists: one for edges,
+one for vertices. This implementation supports only non-unique vertices and DFS and BFS
+take O(numberOfVertices * numberOfEdges) time, which is very slow. The space complexity is O(V + E).
+
+``com.aokolnychyi.ds.graph.NonUniqueVerticesALGraph`` presents the second approach, which relies on
+a list of ``Node``s, where each ``Node`` also contains a list of children. DFS and BFS take
+O(numberOfVertices + numberOfEdges) time, which much better than the first solution. However, there
+are still some problems: unconnected graphs are not handled, you need to iterate over all nodes
+to restore their state.
+
+``com.aokolnychyi.ds.graph.ALGraph`` contains quite flexible architecture and I would prefer
+it as a default graph implementation. Graphs can be connected or disconnected, directed or undirected
+and BFS/DFS will still work.
+
+``com.aokolnychyi.ds.graph.AdjacencyMatrixGraph`` relies on an adjacency matrix and has O(V^2) time
+for BFS and DFS.
+
+### Graph in Scala
+
+#### Notes
+
+- An adjacency list can actually be defined as a set.
+- Use ``type Vertex = T`` to make code more readable.
+
+#### Implementation
+
+This repo contains a Scala implementation based on adjacency lists, which can represent
+directed and undirected graphs. It is available in ``com.aokolnychyi.ds.graph.ScalaALGraph``.
+It allows you to search for a path between two vertices and traverse a graph in BFS/DFS manner.
+
+## Vector
 
 - Scala ``Vector`` and ``immutable.HashMap`` have some similarities but are fundamentally
 different data structures. There is no hashing involved in ``Vector``. The index

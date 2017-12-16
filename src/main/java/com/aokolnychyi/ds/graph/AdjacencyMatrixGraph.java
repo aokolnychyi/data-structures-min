@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -64,6 +65,7 @@ public class AdjacencyMatrixGraph<E> {
     adjacencyMatrix[secondVertexIndex][firstVertexIndex] = 0;
   }
 
+  // O(V^2) time
   public void performDFS() {
     final Set<Integer> visitedVertexIndices = new HashSet<>();
     performDFS(0, visitedVertexIndices);
@@ -82,16 +84,19 @@ public class AdjacencyMatrixGraph<E> {
     }
   }
 
+  // O(V^2) time
   public void performBFS() {
-    final java.util.Queue<Integer> pendingVertexIndexQueue = new ArrayDeque<>();
+    final Queue<Integer> pendingVertexIndexQueue = new ArrayDeque<>();
     final Set<Integer> visitedVertexIndices = new HashSet<>();
     pendingVertexIndexQueue.add(0);
 
     while (!pendingVertexIndexQueue.isEmpty()) {
       final int currentVertexIndex = pendingVertexIndexQueue.remove();
       final Vertex<E> vertex = indexVertexMap.get(currentVertexIndex);
-      visitedVertexIndices.add(currentVertexIndex);
-      System.out.println(vertex.element);
+      if (!visitedVertexIndices.contains(currentVertexIndex)) {
+        visitedVertexIndices.add(currentVertexIndex);
+        System.out.println(vertex.element);
+      }
 
       final int[] vertices = adjacencyMatrix[currentVertexIndex];
       for (int nextVertexIndex = 0; nextVertexIndex < vertices.length; nextVertexIndex++) {

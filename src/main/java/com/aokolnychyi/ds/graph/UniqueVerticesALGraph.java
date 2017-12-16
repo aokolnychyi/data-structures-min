@@ -3,15 +3,15 @@ package com.aokolnychyi.ds.graph;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
- * A directed graph via Adjacent Lists.
- * <p>
+ * A directed graph via Adjacent Lists (non-efficient BFS and DFS).
+ *
  * - Supports only non-unique vertices
  * - Can be used as an undirected graph
  * - O(V + E) space complexity to store the graph
@@ -24,7 +24,82 @@ import java.util.Set;
  */
 public class UniqueVerticesALGraph<E> {
 
-  private static class Edge<E> {
+  private List<Edge> edges = new ArrayList<>();
+  private Set<E> vertices = new HashSet<>();
+
+  public void addEdge(E firstVertex, E secondVertex) {
+    final Edge newEdge = new Edge(firstVertex, secondVertex);
+    edges.add(newEdge);
+    vertices.add(firstVertex);
+    vertices.add(secondVertex);
+  }
+
+  public void performDFS() {
+    final Optional<E> startVertexOp = vertices.stream().findFirst();
+    startVertexOp.ifPresent(vertex -> {
+      final Set<E> visitedVertices = new HashSet<>();
+      performDFS(vertex, visitedVertices);
+    });
+  }
+
+  // O (numberOfVertices * numberOfEdges + numberOfEdges) = O (numberOfVertices * numberOfEdges)
+  // #edges for v1 + incident edges for v1 + #edges for v2 + incident edges for v2 + ...
+  // which is equivalent to O(V * E + E) = O(V * E)
+  private void performDFS(E vertex, Set<E> visitedVertices) {
+    final Stream<E> incidentVertices = findIncidentVertices(vertex);
+    System.out.println(vertex);
+    visitedVertices.add(vertex);
+
+    incidentVertices
+        .filter(incidentVertex -> !visitedVertices.contains(incidentVertex))
+        .forEach(nonVisitedIncidentVertex -> performDFS(nonVisitedIncidentVertex, visitedVertices));
+  }
+
+  // O(numberOfEdges)
+  private Stream<E> findIncidentVertices(E vertex) {
+    return edges.stream()
+        .filter(edge -> edge.firstVertex.equals(vertex))
+        .map(edge -> edge.secondVertex);
+  }
+
+  // O (numberOfVertices * numberOfEdges + numberOfEdges) = O (numberOfVertices * numberOfEdges)
+  public void performBFS() {
+    final Optional<E> startVertexOp = vertices.stream().findFirst();
+    startVertexOp.ifPresent(startVertex -> {
+      final Set<E> visitedVertices = new HashSet<>();
+      final Queue<E> queue = new ArrayDeque<>();
+      queue.add(startVertex);
+
+      while (!queue.isEmpty()) {
+        final E currentVertex = queue.remove();
+        // you can have a case when you add an element to the queue and it is already
+        // there but not in the visited set
+        // as a result, there will be duplicated results without this check
+        if (!visitedVertices.contains(currentVertex)) {
+          System.out.println(currentVertex);
+          visitedVertices.add(currentVertex);
+        }
+
+        final Stream<E> incidentVertices = findIncidentVertices(currentVertex);
+        incidentVertices
+            .filter(vertex -> !visitedVertices.contains(vertex))
+            .forEach(queue::add);
+      }
+    });
+  }
+
+  public void removeVertex(E vertexToDelete) {
+    vertices.remove(vertexToDelete);
+    edges.removeIf(edge ->
+        edge.firstVertex.equals(vertexToDelete) || edge.secondVertex.equals(vertexToDelete));
+  }
+
+  public void removeEdge(E sourceVertex, E destinationVertex) {
+    edges.removeIf(edge ->
+        edge.firstVertex.equals(sourceVertex) || edge.secondVertex.equals(destinationVertex));
+  }
+
+  private class Edge {
     private E firstVertex;
     private E secondVertex;
 
@@ -38,98 +113,6 @@ public class UniqueVerticesALGraph<E> {
       return "Edge{firstVertex=" + firstVertex +
           ", secondVertex=" + secondVertex +
           "}";
-    }
-  }
-
-  private List<Edge<E>> edges = new ArrayList<>();
-  private Set<E> vertices = new HashSet<>();
-
-  public void addEdge(E firstVertex, E secondVertex) {
-    connect(firstVertex, secondVertex);
-    vertices.add(firstVertex);
-    vertices.add(secondVertex);
-  }
-
-  private void connect(E sourceVertex, E destinationVertex) {
-    final Edge<E> newEdge = new Edge<>(sourceVertex, destinationVertex);
-    edges.add(newEdge);
-  }
-
-  public void performDFS() {
-    // if (!vertices.isEmpty()) {
-    //      final E startVertex = vertices.iterator().next();
-    // }
-    final Optional<E> startVertex = vertices.stream().findFirst();
-    if (startVertex.isPresent()) {
-      final Set<E> visitedVertices = new HashSet<>();
-      performDFS(startVertex.get(), visitedVertices);
-    }
-  }
-
-  // O (numberOfVertices * numberOfEdges + numberOfEdges) = O (numberOfVertices * numberOfEdges)
-  private void performDFS(E vertex, Set<E> visitedVertices) {
-    // O(numberOfEdges)
-    final List<E> incidentVertices = findIncidentVertices(vertex);
-    System.out.println(vertex);
-    visitedVertices.add(vertex);
-
-    // Some extra memory for recursion
-    incidentVertices.stream()
-        .filter(incidentVertex -> !visitedVertices.contains(incidentVertex))
-        .forEach(nonVisitedIncidentVertex -> performDFS(nonVisitedIncidentVertex, visitedVertices));
-  }
-
-  private List<E> findIncidentVertices(E vertex) {
-    final List<E> incidentVertices = new ArrayList<>();
-    edges.forEach(edge -> {
-      if (vertex.equals(edge.firstVertex)) {
-        incidentVertices.add(edge.secondVertex);
-      }
-    });
-    return incidentVertices;
-  }
-
-  // O (numberOfVertices * numberOfEdges + numberOfEdges) = O (numberOfVertices * numberOfEdges)
-  public void performBFS() {
-    final Optional<E> startVertex = vertices.stream().findFirst();
-    if (startVertex.isPresent()) {
-      final Set<E> visitedVertices = new HashSet<>();
-      final Queue<E> queue = new ArrayDeque<>();
-      queue.add(startVertex.get());
-
-      while (!queue.isEmpty()) {
-        final E currentVertex = queue.remove();
-        System.out.println(currentVertex);
-        visitedVertices.add(currentVertex);
-
-        final List<E> incidentVertices = findIncidentVertices(currentVertex);
-        incidentVertices.stream()
-            .filter(vertex -> !visitedVertices.contains(vertex))
-            .forEach(queue::add);
-
-      }
-    }
-  }
-
-  public void removeVertex(E vertexToDelete) {
-    vertices.remove(vertexToDelete);
-    final Iterator<Edge<E>> edgeIterator = edges.iterator();
-    while (edgeIterator.hasNext()) {
-      final Edge<E> edge = edgeIterator.next();
-      if (edge.firstVertex.equals(vertexToDelete) || edge.secondVertex.equals(vertexToDelete)) {
-        edgeIterator.remove();
-      }
-    }
-  }
-
-  public void removeEdge(E sourceVertex, E destinationVertex) {
-    final Iterator<Edge<E>> edgeIterator = edges.iterator();
-    while (edgeIterator.hasNext()) {
-      final Edge<E> edge = edgeIterator.next();
-      if (edge.firstVertex.equals(sourceVertex) || edge.secondVertex.equals(destinationVertex)) {
-        edgeIterator.remove();
-        break;
-      }
     }
   }
 }

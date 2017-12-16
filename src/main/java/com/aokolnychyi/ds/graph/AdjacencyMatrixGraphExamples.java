@@ -1,9 +1,8 @@
-package com.aokolnychyi.ds.examples;
+package com.aokolnychyi.ds.graph;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.aokolnychyi.ds.graph.AdjacencyMatrixGraph;
 import com.aokolnychyi.ds.graph.AdjacencyMatrixGraph.Vertex;
 
 public class AdjacencyMatrixGraphExamples {

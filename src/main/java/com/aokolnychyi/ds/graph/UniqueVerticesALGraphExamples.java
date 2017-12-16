@@ -1,6 +1,4 @@
-package com.aokolnychyi.ds.examples;
-
-import com.aokolnychyi.ds.graph.UniqueVerticesALGraph;
+package com.aokolnychyi.ds.graph;
 
 public class UniqueVerticesALGraphExamples {
 

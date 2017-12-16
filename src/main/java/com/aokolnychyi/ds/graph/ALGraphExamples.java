@@ -1,9 +1,8 @@
-package com.aokolnychyi.ds.examples;
+package com.aokolnychyi.ds.graph;
 
-import com.aokolnychyi.ds.graph.EfficientALGraph;
-import com.aokolnychyi.ds.graph.EfficientALGraph.Vertex;
+import com.aokolnychyi.ds.graph.ALGraph.Vertex;
 
-public class EfficientALGraphExamples {
+public class ALGraphExamples {
 
   public static void main(String[] args) {
     final Vertex<Integer> vertex0 = Vertex.newVertex(0);
@@ -13,7 +12,7 @@ public class EfficientALGraphExamples {
     final Vertex<Integer> vertex4 = Vertex.newVertex(4);
     final Vertex<Integer> vertex5 = Vertex.newVertex(5);
 
-    final EfficientALGraph<Integer> graph = new EfficientALGraph<>(true);
+    final ALGraph<Integer> graph = new ALGraph<>(true);
     graph.addVertex(vertex0);
     graph.addVertex(vertex1);
     graph.addVertex(vertex2);
@@ -39,8 +38,7 @@ public class EfficientALGraphExamples {
     System.out.println("BFS");
     graph.performBFS();
 
-
-    final EfficientALGraph<String> disconnectedGraph = new EfficientALGraph<>(true);
+    final ALGraph<String> disconnectedGraph = new ALGraph<>(true);
     final Vertex<String> vertexA = Vertex.newVertex("a");
     final Vertex<String> vertexB = Vertex.newVertex("b");
     final Vertex<String> vertexC = Vertex.newVertex("c");

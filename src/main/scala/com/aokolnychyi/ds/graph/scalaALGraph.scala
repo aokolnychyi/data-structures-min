@@ -4,6 +4,7 @@ case class ScalaALGraph[T](isDirected: Boolean, adjacencyMap: Map[T, Set[T]]) {
 
   type Vertex = T
 
+  // O(1) time
   def addVertex(vertex: Vertex): ScalaALGraph[T] = {
     copy(adjacencyMap = adjacencyMap + (vertex -> Set.empty))
   }
@@ -13,6 +14,7 @@ case class ScalaALGraph[T](isDirected: Boolean, adjacencyMap: Map[T, Set[T]]) {
     copy(adjacencyMap = adjacencyMap ++ newEntries)
   }
 
+  // O(1) time
   def addEdge(firstVertex: Vertex, secondVertex: Vertex): ScalaALGraph[T] = {
     val updatedAdjacencyMap = connect(firstVertex, secondVertex, adjacencyMap)
     if (isDirected) {
@@ -23,6 +25,7 @@ case class ScalaALGraph[T](isDirected: Boolean, adjacencyMap: Map[T, Set[T]]) {
     }
   }
 
+  // O(1) time
   private def connect(
       firstVertex: Vertex,
       secondVertex: Vertex,
@@ -39,6 +42,7 @@ case class ScalaALGraph[T](isDirected: Boolean, adjacencyMap: Map[T, Set[T]]) {
 
   // instead of having a list and a set, one could use mutable.LinkedHashSet (but it is mutable)
   // another approach is to rely on path.contains() but the time complexity will be worse
+  // uses depth-first approach, should be close to O(V + E)
   private def findPath(
       currentVertex: Vertex,
       destinationVertex: Vertex,
@@ -60,11 +64,12 @@ case class ScalaALGraph[T](isDirected: Boolean, adjacencyMap: Map[T, Set[T]]) {
     }
   }
 
+  // O(V + E) time
   def doDepthFirstTraversal(operation: Vertex => Unit): Unit = {
     traverseGraph(operation, doDepthFirstTraversal)
   }
 
-  def doDepthFirstTraversal(
+  private def doDepthFirstTraversal(
       vertex: Vertex,
       operation: Vertex => Unit,
       seenVertices: Set[Vertex]): Set[Vertex] = {
@@ -83,15 +88,17 @@ case class ScalaALGraph[T](isDirected: Boolean, adjacencyMap: Map[T, Set[T]]) {
     }
   }
 
+  // seems like O(E + V) but hard to tell
   def doBreadthFirstTraversal(operation: Vertex => Unit): Unit = {
     traverseGraph(operation, doBreadthFirstTraversal)
   }
 
-  def doBreadthFirstTraversal(
+  private def doBreadthFirstTraversal(
       vertex: Vertex,
       operation: Vertex => Unit,
       seenVertices: Set[Vertex]): Set[Vertex] = {
 
+    // returns seen vertices
     def inner(currentVertices: Set[Vertex], currentlySeenVertices: Set[Vertex]): Set[Vertex] = {
 
       currentVertices.foreach(operation)

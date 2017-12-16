@@ -9,7 +9,7 @@ import static com.aokolnychyi.ds.graph.NonUniqueVerticesALGraph.Node.State.VISIT
 
 /**
  * A directed graph via Adjacent Lists.
- * <p>
+ *
  * - Can be used as an undirected graph
  * - O(V + E) space complexity to store the graph
  * - O(1) to add a vertex and edge
@@ -24,7 +24,7 @@ public class NonUniqueVerticesALGraph<E> {
 
   public static class Node<E> {
 
-    public enum State {UNVISITED, VISITED, VISITING}
+    public enum State {UNVISITED, VISITED}
 
     private E element;
     private State state;
@@ -92,6 +92,7 @@ public class NonUniqueVerticesALGraph<E> {
         .forEach(this::performDFS);
   }
 
+  // O(V + E) time
   public void performBFS() {
     if (!nodes.isEmpty()) {
       final java.util.Queue<Node<E>> queue = new ArrayDeque<>();
@@ -100,8 +101,14 @@ public class NonUniqueVerticesALGraph<E> {
 
       while (!queue.isEmpty()) {
         final Node<E> currentNode = queue.remove();
-        System.out.println(currentNode.element);
-        currentNode.state = VISITED;
+        // you can have a case when you add an element to the queue and it is already
+        // there but not in the visited set
+        // as a result, there will be duplicated results without this check
+        if (currentNode.state != VISITED) {
+          System.out.println(currentNode.element);
+          currentNode.state = VISITED;
+        }
+
         final List<Node<E>> childrenNodes = currentNode.childrenNodes;
         childrenNodes.stream()
             .filter(aNode -> aNode.state == UNVISITED)

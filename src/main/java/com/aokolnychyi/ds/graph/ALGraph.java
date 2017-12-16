@@ -8,14 +8,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 
-import static com.aokolnychyi.ds.graph.EfficientALGraph.Vertex.State.UNVISITED;
-import static com.aokolnychyi.ds.graph.EfficientALGraph.Vertex.State.VISITED;
+import static com.aokolnychyi.ds.graph.ALGraph.Vertex.State.UNVISITED;
+import static com.aokolnychyi.ds.graph.ALGraph.Vertex.State.VISITED;
 
 /**
  * Both directed and undirected graph.
- * <p>
+ *
  * - Supports non-unique vertices
  * - Supports disconnected graphs
  * - O(V + E) space complexity to store the graph.
@@ -27,11 +28,11 @@ import static com.aokolnychyi.ds.graph.EfficientALGraph.Vertex.State.VISITED;
  * - The main benefit - efficient
  * - The main drawback - non-weighted
  */
-public class EfficientALGraph<E> {
+public class ALGraph<E> {
 
   public static class Vertex<E> {
 
-    public enum State {UNVISITED, VISITED, VISITING}
+    public enum State {UNVISITED, VISITED}
 
     private E element;
     private State state;
@@ -47,7 +48,7 @@ public class EfficientALGraph<E> {
   private Map<Vertex<E>, List<Vertex<E>>> adjacencyMap = new HashMap<>();
   private final boolean isDirected;
 
-  public EfficientALGraph(boolean isDirected) {
+  public ALGraph(boolean isDirected) {
     this.isDirected = isDirected;
   }
 
@@ -118,13 +119,15 @@ public class EfficientALGraph<E> {
     Optional<Vertex<E>> unvisitedVertex = getUnvisitedVertex(vertices);
 
     while (unvisitedVertex.isPresent()) {
-      final Deque<Vertex<E>> queue = new ArrayDeque<>();
-      queue.addLast(unvisitedVertex.get());
+      final Queue<Vertex<E>> queue = new ArrayDeque<>();
+      queue.add(unvisitedVertex.get());
 
       while (!queue.isEmpty()) {
-        final Vertex<E> currentVertex = queue.removeFirst();
-        System.out.println(currentVertex.element);
-        currentVertex.state = VISITED;
+        final Vertex<E> currentVertex = queue.remove();
+        if (currentVertex.state != VISITED) {
+          System.out.println(currentVertex.element);
+          currentVertex.state = VISITED;
+        }
         final List<Vertex<E>> incidentVertices = adjacencyMap.get(currentVertex);
         incidentVertices.stream()
             .filter(incidentVertex -> incidentVertex.state == UNVISITED)
