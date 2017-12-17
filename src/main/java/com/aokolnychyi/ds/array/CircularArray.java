@@ -79,30 +79,4 @@ public class CircularArray<T> implements Iterable<T> {
     }
   }
 
-  public static void main(String[] args) {
-    final CircularArray<Integer> objects = new CircularArray<>(4);
-    final CircularArray<Integer> circularArray = new CircularArray<>(Integer.class, 10);
-    circularArray.set(1, 12);
-    // Will not work...
-    // final Integer[] integers = (Integer[]) new Object[2];
-    // final Comparable[] comparables = (Comparable[]) new Object[2];
-    // final Comparable<Integer>[] comparableInts = (Comparable<Integer>[]) new Object[2];
-
-    final Integer[] ints = new Integer[]{1, 2, 3, 4, 5};
-    final CircularArray<Integer> integerCircularArray = new CircularArray<>(ints);
-    integerCircularArray.rotate(2);
-    for (int number: integerCircularArray){
-      System.out.println(number);
-    }
-    System.out.println();
-    integerCircularArray.rotate(-2);
-    for (int number: integerCircularArray){
-      System.out.println(number);
-    }
-    System.out.println();
-    integerCircularArray.rotate(-7);
-    for (int number: integerCircularArray){
-      System.out.println(number);
-    }
-  }
 }

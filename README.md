@@ -857,6 +857,107 @@ This repo contains a Scala implementation based on adjacency lists, which can re
 directed and undirected graphs. It is available in ``com.aokolnychyi.ds.graph.ScalaALGraph``.
 It allows you to search for a path between two vertices and traverse a graph in BFS/DFS manner.
 
+## Circular Array
+
+This chapter is about a special type of arrays called Circular Arrays, which support an array-like
+data structure that can be efficiently rotated.
+
+### Circular Array in Java
+
+#### Notes
+
+- One way to implement this is to actually shift elements each time we call ``rotate`` via
+``System.arraycopy()``. This is not efficient, though. Instead, we can just create a member
+variable ``head`` which points to what should be conceptually viewed as the start of the
+underlying circular array.
+- You need to find some workarounds to create generic arrays since it is not
+possible out of the box. Also, remember type erasure. Whenever you have ``<T>``, it will be replaced
+by ``Object`` after compilation. You can do the following tricks:
+    - ``(T[]) new Object[size]``. Note that if you have ``<T extends Comparable<T>>``, it won't work
+    because ``T`` will no longer be replaced with ``Object`` and ``(Comparable[]) new Object[size]``
+    will obviously fail.
+    - Define a constructor that accepts a generic array ``T[] array``.
+    - Pass an instance of ``java.lang.Class`` to your constructor and
+    call ``(T[]) Array.newInstance(aClass, size)``.
+    
+#### Implementation
+
+A sample implementation can be found in ``com.aokolnychyi.ds.array.CircularArray``. It provides
+the following methods:
+
+- Rotate to the left (``CircularArray#rotate``)
+- Get an element at an index (``CircularArray#get``)
+- Set an item at an index (``CircularArray#set``)
+- Get an iterator (``CircularArray#iterator``)
+
+See examples in ``com.aokolnychyi.ds.array.CircularArrayExamples``.
+
+### Circular Array in Scala
+
+#### Notes
+
+- In Scala, you can also several mechanism to workaround type erasure:
+    - ``class ScalaCircularArray[T: Manifest](val capacity: Int)``. Manifests
+    were introduced to workaround type erasure. The compiler knows more information about types
+    than the JVM runtime can easily represent. A Manifest is a way for the compiler to attach some
+    info at runtime about the type information that was lost. Manifests add additional runtime
+    information which describes the type T. Manifest could be replaced with ClassManifest in this
+    case. ClassManifest knows only the top class ([source](https://stackoverflow.com/questions/3213510/what-is-a-manifest-in-scala-and-when-do-you-need-it)).
+    - ``class ScalaCircularArray2[T: ClassTag](val capacity: Int)``. Manifests had some serious
+    issues: they were unable to fully support Scala's type system. They were thus deprecated
+    in Scala 2.10, and are replaced with TypeTags (which are essentially what the Scala compiler
+    itself uses to represent types, and therefore fully support Scala types) ([source](https://stackoverflow.com/questions/3213510/what-is-a-manifest-in-scala-and-when-do-you-need-it)).
+
+#### Implementation
+
+This repo contains a Scala implementation of a Circular Array in ``com.aokolnychyi.ds.array.ScalaCircularArray``.
+It supports the following methods:
+
+- Rotate to the left (``ScalaCircularArray#rotateLeft``)
+- Get an element at an index (``ScalaCircularArray#get``)
+- Update an element at an index (``ScalaCircularArray#update``)
+
+See examples in ``com.aokolnychyi.ds.array.ScalaCircularArrayExamples``.
+
+## Stream
+
+This chapter briefly talks about ``Stream``s in Java and Scala.
+
+- Scala’s ``Stream`` is slightly different from Java’s ``Stream``. In Scala, you don’t have to call
+a terminal operation to get a result as ``Stream``s are the result ([source](https://dzone.com/articles/java-8-vs-scalapart-ii-streams-api)).
+
+### Stream in Java
+
+#### Notes
+
+- The Streams API is a new API that comes with Java 8 for manipulating a collection and
+streaming data. The Streams API doesn’t mutate state while the Collections API does.
+For example, when you call ``Collections.sort(list)``, the method will sort the collection
+instance that you pass through an argument while calling ``list.stream().sorted()`` gives you
+a new copy of the collection and leave the original one unchanged ([source](https://medium.com/zappos-engineering/java-8-%CE%BBe-vs-scala-part-ii-ea23114e32da)).
+- No storage. A stream is not a data structure that stores elements; instead,
+it conveys elements from a source through a pipeline of computational operations.
+- Functional in nature. An operation on a stream produces a result, but does not modify its source.
+- Laziness-seeking. Many stream operations, such as filtering, mapping, or duplicate removal,
+can be implemented lazily, exposing opportunities for optimization.
+- Consumable. The elements of a stream are only visited once during the life of a stream.
+
+### Stream in Scala
+
+#### Notes
+
+- A great comparison between ``Stream``s, ``View``s, ``Iterator``s is available ([here](https://stackoverflow.com/a/5159356/4108401)).
+- Stream has a function called ``force``. It forces evaluation of the whole stream then
+returns the result. Be careful not to call this function on an infinite stream, as well as
+other operations that force the API to process the whole stream such as ``size()``,
+``toList()``, ``foreach()``, etc ([source](https://medium.com/zappos-engineering/java-8-%CE%BBe-vs-scala-part-ii-ea23114e32da)).
+
+#### Implementation
+
+This repo contains a very basic Stream implementation, which uses lazy variables to evaluate the
+tail only once and pass-by-reference to make the tail lazy. See more details in
+``com.aokolnychyi.ds.stream.Stream``.
+
 ## Vector
 
 - Scala ``Vector`` and ``immutable.HashMap`` have some similarities but are fundamentally
@@ -882,7 +983,6 @@ of the considered data set. It is not possible with ``Vector``. In addition, for
 ``ArrayList`` will be a better option since it has just to dereference once.
 ([source](https://www.infoq.com/presentations/Functional-Data-Structures-in-Scala)).
 
-## Stream
 
 ## Other important notes
 

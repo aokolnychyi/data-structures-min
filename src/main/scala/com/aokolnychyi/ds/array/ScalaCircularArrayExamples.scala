@@ -1,6 +1,4 @@
-package com.aokolnychyi.ds.examples
-
-import com.aokolnychyi.ds.array.ScalaCircularArray
+package com.aokolnychyi.ds.array
 
 object ScalaCircularArrayExamples extends App {
   println(ScalaCircularArray(Array(1, 2, 3, 4, 5)))

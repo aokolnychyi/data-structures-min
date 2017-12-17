@@ -2,9 +2,14 @@ package com.aokolnychyi.ds.array
 
 import scala.annotation.tailrec
 
-// Alternative definitions
-// class ScalaCircularArray[T] (val capacity: Int) {
-// case class ScalaCircularArray[T: Manifest](capacity: Int) {
+// class ScalaCircularArray1[T: Manifest](val capacity: Int) {
+//   val items = new Array[T](capacity)
+// }
+
+// class ScalaCircularArray2[T: ClassTag](val capacity: Int) {
+//   val items = new Array[T](capacity)
+// }
+
 case class ScalaCircularArray[T](private val items: Array[T], private val headIndex: Int = 0) {
 
   def rotateLeft(shift: Int): ScalaCircularArray[T] = {
