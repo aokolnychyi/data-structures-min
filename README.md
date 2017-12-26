@@ -986,8 +986,10 @@ of the considered data set. It is not possible with ``Vector``. In addition, for
 
 ## Other important notes
 
-- node vs wrapper on top
-- Scala's Arrays are Java's Array.
+- Scala's Arrays are Java's Array. Use ``array.mkString("[", ",", "]")`` in Scala and ``Arrays.toString()``
+in Java to represent an array as a readable string.
+- Use ``lowerBound + (upperBound - lowerBound) / 2`` instead of ``(lowerBound + upperBound) / 2``
+to avoid an overflow.
 - Java's Stream is also lazy until you call a collector.
 - Variables used inside lambda expressions must be effectively final. A variable or parameter
 whose value is never changed after it is initialized is effectively final. In other words, if a
