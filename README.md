@@ -28,30 +28,30 @@ pointer in each object ("Introduction to Algorithms" by Thomas H. Cormen).
 - Notes from a very good [comparison](https://stackoverflow.com/a/322742/4108401) of ``LinkedList``
 and ``ArrayList``:
 
-LinkedList<E> allows for constant-time insertions or removals using iterators, but only sequential
+``LinkedList<E>`` allows for constant-time insertions or removals using iterators, but only sequential
 access of elements. In other words, you can walk the list forwards or backwards, but finding a
 position in the list takes time proportional to the size of the list.
 
-ArrayList<E>, on the other hand, allows fast random read access, so you can grab any element in
+``ArrayList<E>``, on the other hand, allows fast random read access, so you can grab any element in
 constant time. But adding or removing from anywhere but the end requires shifting all the latter
 elements over, either to make an opening or fill the gap. Also, if you add more elements than the
 capacity of the underlying array, a new array is allocated, and the old array is copied to the new
-one, so adding to an ArrayList is O(n) in the worst case but constant on average (amortized time).
+one, so adding to an ``ArrayList`` is O(n) in the worst case but constant on average (amortized time).
 
 So depending on the operations you intend to do, you should choose the implementations accordingly.
-Iterating over either kind of List is practically equally cheap. (Iterating over an ArrayList is
-technically faster, but unless you're doing something really performance-sensitive, you shouldn't
+Iterating over either kind of List is practically equally cheap. (Iterating over an ``ArrayList`` is
+technically faster, but unless you're doing something really performance-sensitive, you should not
 worry about this -- they're both constants.)
 
-The main benefits of using a LinkedList arise when you re-use existing iterators to insert and
+The main benefits of using a ``LinkedList`` arise when you re-use existing iterators to insert and
 remove elements. These operations can then be done in O(1) by changing the list locally only.
 In an array list, the remainder of the array needs to be moved (i.e. copied).
-On the other side, seeking in a LinkedList means following the links in O(n), whereas in an
-ArrayList the desired position can be computed mathematically and accessed in O(1).
+On the other side, seeking in a ``LinkedList`` means following the links in O(n), whereas in an
+``ArrayList`` the desired position can be computed mathematically and accessed in O(1).
 
 Also, if you have large lists, keep in mind that memory usage is also different. Each element of a
-LinkedList has more overhead since pointers to the next and previous elements are also stored.
-ArrayLists don't have this overhead. However, ArrayLists take up as much memory as is allocated for
+``LinkedList`` has more overhead since pointers to the next and previous elements are also stored.
+``ArrayList``s don't have this overhead. However, ``ArrayList``s take up as much memory as is allocated for
 the capacity, regardless of whether elements have actually been added.
 
 #### Implementation
@@ -89,7 +89,7 @@ cons operation will need to copy the whole array, leading to a quadratic running
 which means it is a subtype of anything in Scala. There are no instances of ``Nothing``.
 ``Nothing`` is used in the definitions of ``None``, ``Nil``, etc. In addition, you can use
 ``Nothing`` as a return type for methods that never return or return abnormally
-(e.g., throw an exception).
+(e.g., throw an exception) ("Beginning Scala" by Vishal Layka, David Pollak).
 - Scala ``List`` is a monad.
 
 ### Implementation
