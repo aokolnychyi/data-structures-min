@@ -1,5 +1,6 @@
 package com.aokolnychyi.ds.heap
 
+import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 
 class ScalaMutableMaxHeap[T](elements: Seq[T])(implicit imp: T => Ordered[T]) {
@@ -28,6 +29,8 @@ class ScalaMutableMaxHeap[T](elements: Seq[T])(implicit imp: T => Ordered[T]) {
     heap.head
   }
 
+  // non-tail recursive because of the for comprehension
+  // can be tail recursive if you re-write it with isDefined and get()
   private def bubbleUp(index: Int): Unit = {
     for (parentIndex <- parentIndexOp(index)) {
       if (heap(index) > heap(parentIndex)) {
@@ -37,13 +40,12 @@ class ScalaMutableMaxHeap[T](elements: Seq[T])(implicit imp: T => Ordered[T]) {
     }
   }
 
+  @tailrec
   private def maxHeapify(index: Int): Unit = {
     val indices = Seq(Some(index), leftChildIndexOp(index), rightChildIndexOp(index)).flatten
     val maxElementIndex = indices.maxBy(heap(_))
     if (maxElementIndex != index) {
-      val currentElement = heap(index)
-      heap.update(index, heap(maxElementIndex))
-      heap.update(maxElementIndex, currentElement)
+      swap(heap, index, maxElementIndex)
       maxHeapify(maxElementIndex)
     }
   }
@@ -60,7 +62,7 @@ class ScalaMutableMaxHeap[T](elements: Seq[T])(implicit imp: T => Ordered[T]) {
   }
 
   private def leftChildIndexOp(index: Int): Option[Int] = {
-    val leftChildIndex = 2 * index + 2
+    val leftChildIndex = 2 * index + 1
     Some(leftChildIndex).filter(isIndexDefined)
   }
 

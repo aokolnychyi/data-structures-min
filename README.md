@@ -1050,3 +1050,9 @@ but might have cause ``ClassCastException``s.
 - Java ``Arrays.asList`` returns a fixed-size list backed by the specified array.
 You can't add to it, you can't remove from it, you can't structurally modify the list since you
 will get an ``UnsupportedOperationException``.
+- View bounds (i.e., ``[A <% Ordered[A]]``) are deprecated in Scala.
+- An explanation of ``<T extends Comparable<? super T>>`` is available [here](https://stackoverflow.com/a/25783345/4108401).
+- Sometimes closures and for-comprehensions can affect the tail-recursive property of a function.
+- Use ``for (index <- 20 to -1 by -1)`` instead of the ``Range`` class.
+- Use ``ArrayBuffer.fill(numberOfBuckets)(ArrayBuffer.empty[Int])`` instead of a loop to fill
+the default values.
