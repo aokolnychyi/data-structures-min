@@ -1056,3 +1056,10 @@ will get an ``UnsupportedOperationException``.
 - Use ``for (index <- 20 to -1 by -1)`` instead of the ``Range`` class.
 - Use ``ArrayBuffer.fill(numberOfBuckets)(ArrayBuffer.empty[Int])`` instead of a loop to fill
 the default values.
+- Use class tags to work around type erasure in Scala.
+- Distinguish between ``new Array[Int](sortedArrays.length)`` and ``Array[Int](sortedArrays.length)``.
+The former creates an array of size ``sortedArrays.length``, while the latter creates an array of size
+1 that contains ``sortedArrays.length`` as its value.
+- Use ``Ordering.by((t: (Int, T)) => t._2)`` to define a custom ordering in Scala. 
+- Use ``val myOrdering: Ordering[(Boolean, Int, String)] = Ordering.Tuple3(Ordering.Boolean.reverse, Ordering.Int.reverse, Ordering.String)``
+to define a custom ordering for tuples.
