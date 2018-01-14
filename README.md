@@ -14,9 +14,9 @@ This chapter covers linked lists in Java and immutable functional lists in Scala
 
 #### Notes
 
-- A linked list arranges objects in a linear manner. Unlike an array, however, in which the
+- "A linked list arranges objects in a linear manner. Unlike an array, however, in which the
 linear order is determined by the array indices, the order in a linked list is determined by a
-pointer in each object ("Introduction to Algorithms" by Thomas H. Cormen).
+pointer in each object" ("Introduction to Algorithms" by Thomas H. Cormen).
 - Can be singly linked (only next pointer) or doubly linked list (with previous and next pointers).
 - Might be circular (the last element points to the first).
 - Might contain references to the head and tail.
@@ -53,6 +53,10 @@ Also, if you have large lists, keep in mind that memory usage is also different.
 ``LinkedList`` has more overhead since pointers to the next and previous elements are also stored.
 ``ArrayList``s don't have this overhead. However, ``ArrayList``s take up as much memory as is allocated for
 the capacity, regardless of whether elements have actually been added.
+- Lists have their own iterator called ``ListIterator``. It has pointers to the previous and next
+elements, which enables not only deletion but also insertion of elements during iteration.
+See [here](https://stackoverflow.com/questions/10977992/difference-between-iterator-and-listiterator)
+for more details.
 
 #### Implementation
 
@@ -62,6 +66,7 @@ This repo contains a sample implementation of singly linked lists in the
 - Addition to the front (``SinglyLinkedList#addFirst``)
 - Addition to the end (``SinglyLinkedList#addLast``)
 - Remove duplicates using the runner technique (``SinglyLinkedList#removeDuplicates``)
+- Remove duplicates using a hash set(``SinglyLinkedList#removeDuplicates2``)
 - Swap elements pairwise (``SinglyLinkedList#swapPairwiseIteratively``)
 - Swap elements pairwise using recursion (``SinglyLinkedList#swapPairwiseRecursively``)
 - Reverse a list (``SinglyLinkedList#reverse``)
@@ -69,6 +74,9 @@ This repo contains a sample implementation of singly linked lists in the
 - Reverse in groups (``SinglyLinkedList#reverseInGroupsOf``)
 - Return kth last node (``SinglyLinkedList#kthToLastIteratively``)
 - Return kth last node using recursion (``SinglyLinkedList#kthToLastRecursively``)
+- Partition around a value (``SinglyLinkedList#partitionAroundElement``)
+- Partition around a value (``SinglyLinkedList#partitionAroundElement2``)
+- Partition around a value (``SinglyLinkedList#partitionAroundElement3``)
 
 See examples in ``com.aokolnychyi.ds.list.SinglyLinkedListExamples``.
 
@@ -179,7 +187,7 @@ This chapter covers the Queue data structure that has the following general prop
 - Addition and removal in O(1) time.
 - There is a separate interface ``Queue`` in Java. It is implemented by ``LinkedList`` and other
 classes. ``ArrayDeque`` is probably the best implementation.
-- A quote: "I believe that the main performance bottleneck in ``LinkedList`` is the fact that whenever
+- "I believe that the main performance bottleneck in ``LinkedList`` is the fact that whenever
 you push to any end of the deque, behind the scene the implementation allocates a new linked list
 node, which essentially involves JVM/OS, and that's expensive. Also, whenever you pop from
 any end, the internal nodes of ``LinkedList`` become eligible for garbage collection and that's
@@ -1063,3 +1071,11 @@ The former creates an array of size ``sortedArrays.length``, while the latter cr
 - Use ``Ordering.by((t: (Int, T)) => t._2)`` to define a custom ordering in Scala. 
 - Use ``val myOrdering: Ordering[(Boolean, Int, String)] = Ordering.Tuple3(Ordering.Boolean.reverse, Ordering.Int.reverse, Ordering.String)``
 to define a custom ordering for tuples.
+- Use ``Array.fill(numberOfRows)(new Array[Boolean](numberOfColumns))`` to init a two dimensional
+matrix in Scala.
+- A nice [post](https://stackoverflow.com/questions/5245713/scala-can-i-rely-on-the-order-of-items-in-a-set)
+about ordering of elements in Scala ``Set``s.
+- ``string.toCharArray()``produces a copy of the internal character array via System.arraycopy().
+- In Java, you can define labels for specific loops (e.g., ``outer:``). This is helpful if you want
+to break the outer loop from the inner loop.
+- Use ``Comparator.naturalOrder()`` to get a ``Comparator`` for an instance of ``Comparable``.

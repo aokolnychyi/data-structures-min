@@ -1,6 +1,9 @@
 package com.aokolnychyi.ds.list;
 
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 public class SinglyLinkedList<E> {
 
@@ -68,6 +71,25 @@ public class SinglyLinkedList<E> {
         }
         runnerNode = nextRunnerNode;
         nextRunnerNode = runnerNode.next;
+      }
+      currentNode = currentNode.next;
+    }
+  }
+
+  // O(n) time and O(n) space
+  public void removeDuplicates2() {
+    final Set<E> visitedElements = new HashSet<>();
+    Node currentNode = headNode;
+
+    while (currentNode != null) {
+      visitedElements.add(currentNode.element);
+      Node nextNode = currentNode.next;
+      if (nextNode != null && visitedElements.contains(nextNode.element)) {
+        currentNode.next = nextNode.next;
+        // if you are removing the last node
+        if (nextNode == lastNode) {
+          lastNode = currentNode;
+        }
       }
       currentNode = currentNode.next;
     }
@@ -205,6 +227,83 @@ public class SinglyLinkedList<E> {
       rankedNode.node = currentNode;
     }
     return rankedNode;
+  }
+
+  // O(n) time and O(n) space as we produce a new list
+  public SinglyLinkedList<E> partitionAroundElement(E partitionElement, Comparator<E> comparator) {
+    if (headNode == null) return null;
+    final SinglyLinkedList<E> smallerElements = new SinglyLinkedList<>();
+    final SinglyLinkedList<E> biggerElements = new SinglyLinkedList<>();
+    Node currentNode = headNode;
+
+    while (currentNode != null) {
+      final E currentElement = currentNode.element;
+      if (comparator.compare(currentElement, partitionElement) < 0) {
+        // To produce a copy
+        smallerElements.addLast(currentNode.element);
+      } else {
+        // To produce a copy
+        biggerElements.addLast(currentNode.element);
+      }
+      currentNode = currentNode.next;
+    }
+    smallerElements.lastNode.next = biggerElements.headNode;
+    smallerElements.size += biggerElements.size;
+    smallerElements.lastNode = biggerElements.lastNode;
+    return smallerElements;
+  }
+
+  // O(n) time and O(1) space
+  public void partitionAroundElement2(E partitionElement, Comparator<E> comparator) {
+    if (headNode == null) return;
+    Node partitionHead = headNode;
+    Node partitionTail = headNode;
+    Node currentNode = headNode.next;
+
+    while (currentNode != null) {
+      final Node nextNode = currentNode.next;
+      final E currentElement = currentNode.element;
+      if (comparator.compare(currentElement, partitionElement) < 0) {
+        currentNode.next = partitionHead;
+        partitionHead = currentNode;
+      } else {
+        partitionTail.next = currentNode;
+        partitionTail = currentNode;
+      }
+      currentNode = nextNode;
+    }
+    partitionTail.next = null;
+    headNode = partitionHead;
+    lastNode = partitionTail;
+  }
+
+  // O(n) time and O(1) space
+  public void partitionAroundElement3(E partitionElement, Comparator<E> comparator) {
+    if (headNode == lastNode) return;
+
+    Node originalLastNode = lastNode;
+    Node currentNode = headNode;
+    Node previousNode = null;
+
+    while (currentNode != null && currentNode != originalLastNode) {
+
+      E currentElement = currentNode.element;
+      Node nextNode = currentNode.next;
+      if (comparator.compare(currentElement, partitionElement) >= 0) {
+        if (previousNode != null) {
+          previousNode.next = nextNode;
+        } else {
+          headNode = currentNode.next;
+        }
+        lastNode.next = currentNode;
+        currentNode.next = null;
+        lastNode = currentNode;
+      } else {
+        previousNode = currentNode;
+      }
+
+      currentNode = nextNode;
+    }
   }
 
   @Override
