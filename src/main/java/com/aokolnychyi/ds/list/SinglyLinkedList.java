@@ -1,9 +1,13 @@
 package com.aokolnychyi.ds.list;
 
+import java.util.ArrayDeque;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
+import java.util.Stack;
 
 public class SinglyLinkedList<E> {
 
@@ -304,6 +308,122 @@ public class SinglyLinkedList<E> {
 
       currentNode = nextNode;
     }
+  }
+
+  public boolean isPalindrom1() {
+    final SinglyLinkedList<E> reversedCopy = makeReverseCopy();
+    return areEqual(this, reversedCopy);
+  }
+
+  public SinglyLinkedList<E> makeReverseCopy() {
+    final SinglyLinkedList<E> reversedList = new SinglyLinkedList<>();
+    Node currentNode = headNode;
+
+    while (currentNode != null) {
+      final E currentElement = currentNode.element;
+      reversedList.addFirst(currentElement);
+      currentNode = currentNode.next;
+    }
+
+    return reversedList;
+  }
+
+  private boolean areEqual(SinglyLinkedList<E> firstList, SinglyLinkedList<E> secondList) {
+    Node firstListNode = firstList.headNode;
+    Node secondListNode = secondList.headNode;
+    boolean areEqual = true;
+
+    while (firstListNode != null && secondListNode != null) {
+      final E firstListElement = firstListNode.element;
+      final E secondListElement = secondListNode.element;
+
+      if (!firstListElement.equals(secondListElement)) {
+        areEqual = false;
+        break;
+      }
+
+      firstListNode = firstListNode.next;
+      secondListNode = secondListNode.next;
+    }
+
+    return areEqual && (firstListNode == null && secondListNode == null);
+  }
+
+  public boolean isPalindrom2() {
+    final Deque<E> stack = new ArrayDeque<>();
+    Node fastNode = headNode;
+    Node slowNode = headNode;
+    boolean isPalindrom = true;
+
+    // Push elements from the first half of the list to stack.
+    // When fast runner (which is moving at 2x speed) reaches the end
+    // of the list, then we know we are at the middle.
+    while (fastNode != null && fastNode.next != null) {
+      stack.push(slowNode.element);
+      slowNode = slowNode.next;
+      fastNode = fastNode.next.next;
+    }
+
+    // if odd number of elements
+    if (fastNode != null) {
+      slowNode = slowNode.next;
+    }
+
+    while (slowNode != null) {
+      final E topElementOnStack = stack.pop();
+      final E element = slowNode.element;
+      if (!topElementOnStack.equals(element)) {
+        isPalindrom = false;
+        break;
+      }
+      slowNode = slowNode.next;
+    }
+    return isPalindrom;
+  }
+
+  public Optional<E> getIntersection(SinglyLinkedList<E> anotherList) {
+    // Can compare the end nodes, if not equal -> no intersection
+    int currentListSize = getSize(this);
+    int anotherListSize = getSize(anotherList);
+
+    Node currentListNode = headNode;
+    Node anotherListNode = anotherList.headNode;
+    if (currentListSize < anotherListSize) {
+      anotherListNode = advance(anotherListNode, anotherListSize - currentListSize);
+    } else if (currentListSize > anotherListSize) {
+      currentListNode = advance(currentListNode, currentListSize - anotherListSize);
+    }
+
+    Node intersectionNode = null;
+    while (currentListNode != null && anotherListNode != null) {
+      // == is here on purpose, equals would change the semantics
+      if (currentListNode.element == anotherListNode.element) {
+        intersectionNode = currentListNode;
+        break;
+      }
+      currentListNode = currentListNode.next;
+      anotherListNode = anotherListNode.next;
+    }
+
+    return Optional.ofNullable(intersectionNode).map(node -> node.element);
+  }
+
+  private int getSize(SinglyLinkedList<E> list) {
+    int size = 0;
+    Node currentNode = list.headNode;
+    while (currentNode != null) {
+      size++;
+      currentNode = currentNode.next;
+    }
+    return size;
+  }
+
+  private Node advance(Node node, int steps) {
+    while (node != null && steps > 0) {
+      node = node.next;
+      steps--;
+    }
+    return node;
   }
 
   @Override

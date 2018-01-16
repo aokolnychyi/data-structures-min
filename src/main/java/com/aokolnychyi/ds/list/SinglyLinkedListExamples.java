@@ -1,6 +1,7 @@
 package com.aokolnychyi.ds.list;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 public class SinglyLinkedListExamples {
 
@@ -78,5 +79,41 @@ public class SinglyLinkedListExamples {
     duplicateLinkedList.removeDuplicates2();
     System.out.println(duplicateLinkedList);
     System.out.println("Last: " + duplicateLinkedList.getLast());
+
+    System.out.println("Is palindrome");
+    final SinglyLinkedList<Integer> singlyLinkedList = new SinglyLinkedList<>();
+    singlyLinkedList.addLast(1);
+    singlyLinkedList.addLast(2);
+    singlyLinkedList.addLast(3);
+    singlyLinkedList.addLast(4);
+    singlyLinkedList.addLast(4);
+    singlyLinkedList.addLast(3);
+    singlyLinkedList.addLast(2);
+    singlyLinkedList.addLast(1);
+
+    System.out.println(singlyLinkedList);
+    System.out.println(singlyLinkedList.isPalindrom1());
+    System.out.println(singlyLinkedList.isPalindrom2());
+
+    System.out.println("Intersection");
+    SinglyLinkedList<Integer> linkedList1 = new SinglyLinkedList<>();
+    SinglyLinkedList<Integer> linkedList2 = new SinglyLinkedList<>();
+
+    linkedList1.addLast(1);
+    linkedList1.addLast(2);
+    linkedList1.addLast(3);
+    linkedList1.addLast(4);
+    linkedList1.addLast(5);
+    linkedList1.addLast(6);
+
+    linkedList2.addLast(3);
+    linkedList2.addLast(4);
+    linkedList2.addLast(5);
+    linkedList2.addLast(6);
+
+    Optional<Integer> intersection = linkedList1.getIntersection(linkedList2);
+    System.out.println(linkedList1);
+    System.out.println(linkedList2);
+    System.out.println(intersection);
   }
 }

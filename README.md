@@ -77,6 +77,9 @@ This repo contains a sample implementation of singly linked lists in the
 - Partition around a value (``SinglyLinkedList#partitionAroundElement``)
 - Partition around a value (``SinglyLinkedList#partitionAroundElement2``)
 - Partition around a value (``SinglyLinkedList#partitionAroundElement3``)
+- Check if it is a palindrome using a reversed copy (``SinglyLinkedList#isPalindrom1``)
+- Check if it is a palindrome using a stack (``SinglyLinkedList#isPalindrom2``)
+- Check if it is a palindrome using a stack (``SinglyLinkedList#isPalindrom2``)
 
 See examples in ``com.aokolnychyi.ds.list.SinglyLinkedListExamples``.
 
@@ -1079,3 +1082,5 @@ about ordering of elements in Scala ``Set``s.
 - In Java, you can define labels for specific loops (e.g., ``outer:``). This is helpful if you want
 to break the outer loop from the inner loop.
 - Use ``Comparator.naturalOrder()`` to get a ``Comparator`` for an instance of ``Comparable``.
+- Use ``Optional.ofNullable(intersectionNode).map(node -> node.element)`` instead of the ternary
+operator.
