@@ -112,6 +112,10 @@ A simplified implementation of functional lists is available in the
 - Get the first element (``List#head``)
 - Get the tail (``List#tail``)
 - Apply a function to all elements inside and return a new list (``List#map``)
+- Check if an element is present (``List#contains``)
+- Get a reversed copy (``List#reversed``)
+- Get a copy with unique value (``List#distinct``)
+- Get (``List#distinct``)
 
 Check out examples in ``com.aokolnychyi.ds.list.ScalaListExamples``.
 
@@ -141,6 +145,7 @@ due to a limited amount of garbage it generates (the old array will be discarded
 Overall, ``ArrayDeque`` is the best queue and stack implementation. ``ArrayDeque`` doesn't have
 the overhead of node allocations that ``LinkedList`` has nor the overhead of shifting the array
 contents left on remove that ``ArrayList`` has ([source](http://java-performance.info/java-collections-overview/)).
+- ``ArrayDeque``'s ``poll()`` returns null while ``pop`` throws an exception.
 
 #### Implementation
 
@@ -1084,3 +1089,8 @@ to break the outer loop from the inner loop.
 - Use ``Comparator.naturalOrder()`` to get a ``Comparator`` for an instance of ``Comparable``.
 - Use ``Optional.ofNullable(intersectionNode).map(node -> node.element)`` instead of the ternary
 operator.
+- Always check for an overflow while working with ints.
+- Pay attention to shadowing of variables in inner functions in Scala. 
+- Always pay attention to tail recursion. For example, ``elem1 :: removeDuplicates(tail)`` is
+not a tail-recursive call.
+- Consider omitting braces in your def definitions to have syntax like ``list.reversed``.

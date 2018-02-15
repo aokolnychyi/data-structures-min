@@ -32,6 +32,13 @@ public class ALGraphExamples {
     graph.addEdge(vertex3, vertex2);
     graph.addEdge(vertex3, vertex4);
 
+    System.out.println("Contains Path");
+
+    System.out.println(graph.containsPath(vertex0, vertex1));
+    System.out.println(graph.containsPath(vertex1, vertex3));
+    System.out.println(graph.containsPath(vertex1, vertex4));
+    System.out.println(graph.containsPath(vertex4, vertex0));
+
     System.out.println("DFS");
     graph.performDFS();
 

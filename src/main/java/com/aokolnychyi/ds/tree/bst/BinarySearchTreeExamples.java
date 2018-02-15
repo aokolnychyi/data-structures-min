@@ -41,6 +41,18 @@ public class BinarySearchTreeExamples {
     System.out.println("Is Balanced");
     System.out.println(binarySearchTree.isBalanced1());
     System.out.println(binarySearchTree.isBalanced2());
+    System.out.println(binarySearchTree.isBalanced3());
+    final BinarySearchTree<Integer> balancedTree = new BinarySearchTree<>();
+    balancedTree.insert(8);
+    balancedTree.insert(4);
+    balancedTree.insert(12);
+    balancedTree.insert(1);
+    balancedTree.insert(5);
+    balancedTree.insert(9);
+    balancedTree.insert(14);
+    System.out.println(balancedTree.isBalanced1());
+    System.out.println(balancedTree.isBalanced2());
+    System.out.println(balancedTree.isBalanced3());
 
     System.out.println("Deepest Vertex");
     System.out.println(binarySearchTree.getDeepestNode());

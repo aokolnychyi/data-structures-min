@@ -139,4 +139,37 @@ public class ALGraph<E> {
 
     vertices.forEach(vertex -> vertex.state = UNVISITED);
   }
+
+  public boolean containsPath(Vertex<E> srcVertex, Vertex<E> dstVertex) {
+    boolean isPathPresent = false;
+
+    if (srcVertex == dstVertex) {
+      isPathPresent = true;
+    } else {
+      final Deque<Vertex<E>> queue = new ArrayDeque<>();
+      queue.add(srcVertex);
+      srcVertex.state = VISITED;
+
+      outer:
+      while (!queue.isEmpty()) {
+        Vertex<E> vertex = queue.remove();
+        List<Vertex<E>> adjacentVertices = adjacencyMap.get(vertex);
+        for (Vertex<E> adjacentVertex : adjacentVertices) {
+          if (adjacentVertex.state == UNVISITED) {
+            if (adjacentVertex == dstVertex) {
+              isPathPresent = true;
+              break outer;
+            } else {
+              adjacentVertex.state = VISITED;
+              queue.add(adjacentVertex);
+            }
+          }
+        }
+
+      }
+    }
+
+    adjacencyMap.keySet().forEach(v -> v.state = UNVISITED);
+    return isPathPresent;
+  }
 }

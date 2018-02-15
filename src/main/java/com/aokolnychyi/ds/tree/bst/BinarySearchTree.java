@@ -3,9 +3,11 @@ package com.aokolnychyi.ds.tree.bst;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -266,6 +268,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
   }
 
   // On a balanced tree, T(n) = 2 * T(n/2) + O(n) => O(n * log n) time
+  // On a linked list, T(n) = T(n - 1) + O(n) => O(n^2) time
   public boolean isBalanced1() {
     return isBalanced1(rootNode);
   }
@@ -317,6 +320,43 @@ public class BinarySearchTree<E extends Comparable<E>> {
     } else {
       return Math.max(heightOfLeftSubTree, heightOfRightSubTree) + 1;
     }
+  }
+
+  public boolean isBalanced3() {
+    final Map<Node<E>, Integer> cache = new HashMap<>();
+    return isBalanced3(rootNode, cache);
+  }
+
+  private boolean isBalanced3(Node<E> node, Map<Node<E>, Integer> cache) {
+    final boolean isBalanced;
+    if (node == null) {
+      isBalanced = true;
+    } else {
+      final int heightOfLeftSubTree = getHeightOfTree(node.leftChild, cache);
+      final int heightOfRightSubTree = getHeightOfTree(node.rightChild, cache);
+      final int heightDifference = Math.abs(heightOfLeftSubTree - heightOfRightSubTree);
+      isBalanced = heightDifference <= 1 &&
+          isBalanced3(node.leftChild, cache) &&
+          isBalanced3(node.rightChild, cache);
+    }
+    return isBalanced;
+  }
+
+  private int getHeightOfTree(Node<E> rootNode, Map<Node<E>, Integer> cache) {
+    final int height;
+    if (rootNode == null) {
+      height = -1;
+    } else if (cache.containsKey(rootNode)) {
+      System.out.println("cache hit");
+      height = cache.get(rootNode);
+    } else {
+      final int heightOfLeftSubTree = getHeightOfTree(rootNode.leftChild, cache);
+      final int heightOfRightSubTree = getHeightOfTree(rootNode.rightChild, cache);
+      int maxHeightOfSubTree = Math.max(heightOfLeftSubTree, heightOfRightSubTree);
+      height = maxHeightOfSubTree + 1;
+      cache.put(rootNode, height);
+    }
+    return height;
   }
 
   // O(n) time and space
