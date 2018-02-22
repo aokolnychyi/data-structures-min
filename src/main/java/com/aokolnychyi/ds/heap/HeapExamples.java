@@ -60,5 +60,11 @@ public class HeapExamples {
     System.out.println(builtMinHeap.remove());
     System.out.println(builtMinHeap.remove());
 
+    final MinHeap<Integer> minHeap2 = new MinHeap<>();
+    minHeap2.add(1);
+    minHeap2.add(5);
+    minHeap2.add(-3);
+    minHeap2.add(4);
+    System.out.println(minHeap2.peek());
   }
 }

@@ -115,7 +115,7 @@ A simplified implementation of functional lists is available in the
 - Check if an element is present (``List#contains``)
 - Get a reversed copy (``List#reversed``)
 - Get a copy with unique value (``List#distinct``)
-- Get (``List#distinct``)
+- Swap elements pair-wise (``List#swapPairwise``)
 
 Check out examples in ``com.aokolnychyi.ds.list.ScalaListExamples``.
 
@@ -145,7 +145,7 @@ due to a limited amount of garbage it generates (the old array will be discarded
 Overall, ``ArrayDeque`` is the best queue and stack implementation. ``ArrayDeque`` doesn't have
 the overhead of node allocations that ``LinkedList`` has nor the overhead of shifting the array
 contents left on remove that ``ArrayList`` has ([source](http://java-performance.info/java-collections-overview/)).
-- ``ArrayDeque``'s ``poll()`` returns null while ``pop`` throws an exception.
+- ``ArrayDeque``'s ``poll()`` returns null while ``pop()`` throws an exception.
 
 #### Implementation
 
@@ -1094,3 +1094,4 @@ operator.
 - Always pay attention to tail recursion. For example, ``elem1 :: removeDuplicates(tail)`` is
 not a tail-recursive call.
 - Consider omitting braces in your def definitions to have syntax like ``list.reversed``.
+- Use ``Collections.nCopies`` to produce a list of n elements that are the same.

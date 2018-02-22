@@ -65,6 +65,7 @@ public class MaxHeap<E extends Comparable<E>> extends Heap<E> {
 
   // O(log(n)) time
   private void fix(int index) {
+    if (index == 0) return;
     int indexOfParentElement = getIndexOfParentElement(index);
     E currentElement = heap.get(index);
     E parentElement = heap.get(indexOfParentElement);

@@ -28,13 +28,15 @@ public class ComparableTreeNode<E extends Comparable<E>> implements Comparable<C
       Map<ComparableTreeNode<E>, ComparableTreeNode<E>> minNodeCache) {
 
     ComparableTreeNode<E> leftMaxNode = getMaxNode(node.leftChildNode, maxNodeCache);
-    ComparableTreeNode<E> rightMinNode = getMinNode(node.rightChildNode, minNodeCache);
-
-    boolean isLeftConditionViolated = leftMaxNode != null && leftMaxNode.element.compareTo(node.element) > 0;
-    boolean isRightConditionViolated = rightMinNode != null && rightMinNode.element.compareTo(node.element) <= 0;
-    if (isLeftConditionViolated || isRightConditionViolated) {
+    if (leftMaxNode != null && leftMaxNode.element.compareTo(node.element) > 0) {
       return false;
     }
+
+    ComparableTreeNode<E> rightMinNode = getMinNode(node.rightChildNode, minNodeCache);
+    if (rightMinNode != null && rightMinNode.element.compareTo(node.element) <= 0) {
+      return false;
+    }
+
     return (node.leftChildNode == null || isBST(node.leftChildNode, maxNodeCache, minNodeCache)) &&
            (node.rightChildNode == null || isBST(node.rightChildNode, maxNodeCache, minNodeCache));
   }

@@ -104,10 +104,10 @@ public class BinarySearchTree<E extends Comparable<E>> {
       minDepth = 1;
     } else if (rightChild != null && leftChild == null) {
       // only right subtree is present
-      minDepth = getMinDepth(rightChild);
+      minDepth = getMinDepth(rightChild) + 1;
     } else if (rightChild == null && leftChild != null) {
       // only left subtree is present
-      minDepth = getMinDepth(leftChild);
+      minDepth = getMinDepth(leftChild) + 1;
     } else {
       // both subtrees are present
       final int minDepthOfLeftSubtree = getMinDepth(leftChild);

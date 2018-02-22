@@ -29,6 +29,12 @@ public class BinarySearchTreeExamples {
     System.out.println("Min Depth");
     System.out.println(binarySearchTree.getMinDepth());
     System.out.println(binarySearchTree.getMinDepth2());
+    final BinarySearchTree<Integer> binarySearchTree2 = new BinarySearchTree<>();
+    binarySearchTree2.insert(5);
+    binarySearchTree2.insert(4);
+    binarySearchTree2.insert(3);
+    binarySearchTree2.insert(2);
+    System.out.println(binarySearchTree2.getMinDepth());
 
     System.out.println("Elements by levels");
     System.out.println(binarySearchTree.getElementsByLevel1());
