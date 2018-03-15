@@ -411,8 +411,8 @@ an efficient iterator that returns all elements in sorted order ([source](http:/
 #### Implementation
 
 This repo contains a set of classes that can represent a binary tree. Those classes are contained
-in ``com.aokolnychyi.ds.tree.scalaBinaryTree`` file. There is a generic trait called ``Tree``, which
-is implemented by ``Leaf``, ``Empty``, ``Node``. The following methods are supported:
+in the ``com.aokolnychyi.ds.tree.scalaBinaryTree`` file. There is a generic trait called ``Tree``,
+which is implemented by ``Leaf``, ``Empty``, ``Node``. The following methods are supported:
 
 - Compute the size of a tree (``Tree#size``)
 - Compute the depth of a tree (``Tree#depth``)
@@ -422,6 +422,9 @@ is implemented by ``Leaf``, ``Empty``, ``Node``. The following methods are suppo
 - Fold a tree in the post-order manner(``Tree#foldPostOrder``)
 - Compute the size of a tree via fold (``Tree#sizeViaFold``)
 - If there is an implicit ordering, you can find the max element (``Tree#max``)
+
+Apart from the immutable version, there is also a mutable one defined in 
+the ``com.aokolnychyi.ds.tree.mutable.scalaBinaryTree`` file.
 
 ## Prefix Tree (Trie)
 
@@ -742,9 +745,11 @@ that also acts as an empty map.
 ``com.aokolnychyi.ds.map.ScalaHashMap`` is extended by ``SingleEntryHashMap``
 (holds only one key-value pair), ``CollisionHashMap`` (holds multiple key-value pairs but all
 with the same cache), ``HashTrieMap`` (represents hash maps using the trie data structure).
-Refer to the comments in the code for more details.
+Refer to the comments in the code for more details. See examples in ``com.aokolnychyi.ds.map.ScalaHashMapExamples``.
 
-See examples in ``com.aokolnychyi.ds.map.ScalaHashMapExamples``.
+Apart from the immutable version, there is also a mutable variant that uses
+chaining and BSTs. It is available in ``com.aokolnychyi.ds.map.mutable.ScalaHashMap`` with
+examples in ``com.aokolnychyi.ds.map.mutable.ScalaMutableHashMapExamples``.
 
 ## LRU Cache
 
@@ -1095,3 +1100,5 @@ operator.
 not a tail-recursive call.
 - Consider omitting braces in your def definitions to have syntax like ``list.reversed``.
 - Use ``Collections.nCopies`` to produce a list of n elements that are the same.
+- Neither ``Seq``s nor ``mutable.Heap`` have ``+=`` method.
+ 

@@ -52,8 +52,8 @@ class ScalaMutableMaxHeap[T](elements: Seq[T])(implicit imp: T => Ordered[T]) {
 
   private def swap(seq: ArrayBuffer[T], firstIndex: Int, secondIndex: Int): Unit = {
     val firstIndexElement = seq(firstIndex)
-    seq.update(firstIndex, seq(secondIndex))
-    seq.update(secondIndex, firstIndexElement)
+    seq(firstIndex) = seq(secondIndex)
+    seq(secondIndex) = firstIndexElement
   }
 
   private def parentIndexOp(index: Int): Option[Int] = {
