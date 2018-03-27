@@ -102,6 +102,19 @@ which means it is a subtype of anything in Scala. There are no instances of ``No
 ``Nothing`` as a return type for methods that never return or return abnormally
 (e.g., throw an exception) ("Beginning Scala" by Vishal Layka, David Pollak).
 - Scala ``List`` is a monad.
+- Scala also has mutable lists. For example, ``MutableList`` and ``ListBuffer``. Quote from [here](https://stackoverflow.com/a/5753935/4108401)
+"``ListBuffer`` uses internally ``Nil`` and ``::`` to build an immutable ``List`` and allows
+constant-time removal of the first and !!! last elements. Its toList method returns the normal
+immutable ``List`` in constant time as well, as it can directly return the structure maintained
+internally. If you call toList and then again append an element to the buffer, it takes linear
+time with respect to the current number of elements in the buffer to recreate a new structure,
+as it must not mutate the exported list any more. 
+
+``MutableList`` works internally with ``LinkedList`` instead, an (openly, not like ``::``) mutable
+linked list implementation which knows of its element and successor (like ``::``).
+``MutableList`` also keeps pointers to the first and last element, but toList returns in linear
+time, as the resulting ``List`` is constructed from the ``LinkedList``. Thus, it doesn't need
+to reinitialize the buffer after a ``List`` has been exported."
 
 ### Implementation
 
@@ -118,6 +131,14 @@ A simplified implementation of functional lists is available in the
 - Swap elements pair-wise (``List#swapPairwise``)
 
 Check out examples in ``com.aokolnychyi.ds.list.ScalaListExamples``.
+
+A mutable version is defined in ``com.aokolnychyi.ds.list.mutable.List``. It supports the following
+methods:
+
+- Prepend an element (``List#+=:``)
+- Append an element (``List#+=``)
+
+See examples in ``com.aokolnychyi.ds.list.mutable.ScalaListExamples``
 
 ## Stack
 

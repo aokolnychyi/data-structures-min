@@ -27,9 +27,9 @@ public class SinglyLinkedList<E> {
   }
 
   // O(1) time
-  public void addLast(final E e) {
+  public void addLast(final E element) {
     final Node oldLastNode = lastNode;
-    final Node newNode = new Node(e, null);
+    final Node newNode = new Node(element, null);
     lastNode = newNode;
     if (oldLastNode == null) {
       headNode = newNode;

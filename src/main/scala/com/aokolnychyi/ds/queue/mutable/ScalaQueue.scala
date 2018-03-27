@@ -12,7 +12,7 @@ class ScalaQueue[T](capacity: Int = 4) {
   def dequeue(): T = {
     if (size == 0) throw new NoSuchElementException("cannot dequeue from an empty queue")
     val head = elements(headIndex)
-    elements.update(headIndex, None)
+    elements(headIndex) = None
     // if there is only one element and it is removed
     if (headIndex == tailIndex) {
       headIndex = -1
@@ -27,7 +27,7 @@ class ScalaQueue[T](capacity: Int = 4) {
   def enqueue(element: T): Unit = {
     if (size == capacity) throw new RuntimeException("cannot insert into a full queue")
     tailIndex = (tailIndex + 1) % capacity
-    elements.update(tailIndex, Some(element))
+    elements(tailIndex) = Some(element)
     // handle insertions to an empty queue
     if (headIndex == -1) headIndex = 0
   }
