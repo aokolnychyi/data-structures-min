@@ -22,7 +22,7 @@ case object Nil extends List[Nothing] {
     throw new UnsupportedOperationException("Trying to access the tail of an empty list!")
   }
   override def contains[E >: Nothing](element: E): Boolean = false
-  override def map[V](function: (Nothing) => V): List[Nothing] = Nil
+  override def map[V](function: Nothing => V): List[Nothing] = Nil
   override def reversed: List[Nothing] = Nil
   override def distinct: List[Nothing] = Nil
   override def swapPairwise(): List[Nothing] = Nil
@@ -30,7 +30,7 @@ case object Nil extends List[Nothing] {
 
 case class Cons[T](head: T, tail: List[T]) extends List[T] {
   override def isEmpty: Boolean = false
-  override def map[V](function: (T) => V): List[V] = Cons(function(head), tail.map(function))
+  override def map[V](function: T => V): List[V] = Cons(function(head), tail.map(function))
   override def contains[E >: T](element: E): Boolean =
     if (element == head) true else tail.contains(element)
   override def reversed: List[T] = {
