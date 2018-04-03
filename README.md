@@ -137,6 +137,8 @@ methods:
 
 - Prepend an element (``List#+=:``)
 - Append an element (``List#+=``)
+- Remove duplicates (``List#removeDuplicates``)
+- Partition a list around a value (``List#partition``)
 
 See examples in ``com.aokolnychyi.ds.list.mutable.ScalaListExamples``
 

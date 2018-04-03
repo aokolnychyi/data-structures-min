@@ -28,6 +28,16 @@ class List[T] {
     length += 1
   }
 
+  def head: T = {
+    if (headNode == null) throw new NoSuchElementException("head on an empty list")
+    headNode.element
+  }
+
+  def last: T = {
+    if (lastNode == null) throw new NoSuchElementException("last on an empty list")
+    lastNode.element
+  }
+
   def size: Int = length
 
   def removeDuplicates(): Unit = {
@@ -49,6 +59,29 @@ class List[T] {
       currentNode = currentNode.next
     }
 
+  }
+
+  def partition(pivot: T)(implicit imp: T => Ordered[T]): Unit = {
+    if (size <= 1) return
+    var partitionHeadNode = headNode
+    var partitionLastNode = headNode
+
+    var currentNode = headNode.next
+    while (currentNode != null) {
+      val nextNode = currentNode.next
+      if (currentNode.element < pivot) {
+        currentNode.next = partitionHeadNode
+        partitionHeadNode = currentNode
+      } else {
+        partitionLastNode.next = currentNode
+        partitionLastNode = currentNode
+      }
+      currentNode = nextNode
+    }
+
+    headNode = partitionHeadNode
+    lastNode = partitionLastNode
+    lastNode.next = null
   }
 
   override def toString: String = {

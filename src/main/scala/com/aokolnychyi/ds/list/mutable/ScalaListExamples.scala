@@ -25,6 +25,16 @@ object ScalaListExamples {
     val list3 = new List[Int]()
     list3.removeDuplicates()
     println(list3)
+    println("----------------")
+    val list4 = new List[Int]()
+    5 +=: list4
+    list4 += 1
+    4 +=: list4
+    list4 += 2
+    list4.partition(3)
+    println(list4)
+    println(list4.head)
+    println(list4.last)
   }
 
 }
