@@ -28,17 +28,17 @@ class ScalaDeque[T](capacity: Int = 4) {
    insert(element)
   }
 
+  // O(1) time
+  def push(element: T): Unit = {
+    insert(element)
+  }
+
   private def insert(element: T): Unit = {
     if (size == capacity) throw new RuntimeException("cannot insert into a full deque")
     tailIndex = (tailIndex + 1) % capacity
     elements(tailIndex) = Some(element)
     // handle insertions to an empty deque
     if (headIndex == -1) headIndex = 0
-  }
-
-  // O(1) time
-  def push(element: T): Unit = {
-    insert(element)
   }
 
   // O(1) time

@@ -35,6 +35,11 @@ object ScalaListExamples {
     println(list4)
     println(list4.head)
     println(list4.last)
+    println("----------------")
+    list4.reverse()
+    println(list4)
+    println(list4.head)
+    println(list4.last)
   }
 
 }

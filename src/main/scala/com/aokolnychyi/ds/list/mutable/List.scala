@@ -84,6 +84,23 @@ class List[T] {
     lastNode.next = null
   }
 
+  def reverse(): Unit = {
+    if (length == 0) return
+
+    var previousNode: Node = null
+    var currentNode = headNode
+
+    while (currentNode != null) {
+      val nextNode = currentNode.next
+      currentNode.next = previousNode
+      previousNode = currentNode
+      currentNode = nextNode
+    }
+
+    lastNode = headNode
+    headNode = previousNode
+  }
+
   override def toString: String = {
     var currentNode = headNode
     val stringBuilder = new StringBuilder()

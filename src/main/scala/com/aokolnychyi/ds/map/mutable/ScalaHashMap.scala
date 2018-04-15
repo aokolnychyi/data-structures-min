@@ -8,12 +8,12 @@ class ScalaHashMap[K, V](val capacity: Int = 4) {
 
     def insert(bucket: Option[Entry]): Option[Entry] = bucket match {
       case None => Some(Entry(key, value, None, None))
-      case Some(existingEntry) if existingEntry.key == key && existingEntry.key.## == key.## =>
-        Some(existingEntry.copy(value = value))
-      case Some(existingEntry) if key.## < existingEntry.key.## =>
-        Some(existingEntry.copy(leftChild = insert(existingEntry.leftChild)))
-      case Some(existingEntry) =>
-        Some(existingEntry.copy(rightChild = insert(existingEntry.rightChild)))
+      case Some(entry) if entry.key == key && entry.key.## == key.## =>
+        Some(entry.copy(value = value))
+      case Some(entry) if key.## < entry.key.## =>
+        Some(entry.copy(leftChild = insert(entry.leftChild)))
+      case Some(entry) =>
+        Some(entry.copy(rightChild = insert(entry.rightChild)))
     }
 
     elements(bucketIndex(key)) = insert(elements(bucketIndex(key)))
