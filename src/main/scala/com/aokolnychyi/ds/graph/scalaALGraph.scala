@@ -1,21 +1,19 @@
 package com.aokolnychyi.ds.graph
 
-case class ScalaALGraph[T](isDirected: Boolean, adjacencyMap: Map[T, Set[T]]) {
-
-  type Vertex = T
+case class ScalaALGraph[Vertex](isDirected: Boolean, adjacencyMap: Map[Vertex, Set[Vertex]]) {
 
   // O(1) time
-  def addVertex(vertex: Vertex): ScalaALGraph[T] = {
+  def addVertex(vertex: Vertex): ScalaALGraph[Vertex] = {
     copy(adjacencyMap = adjacencyMap + (vertex -> Set.empty))
   }
 
-  def addVertices(vertices: Vertex*): ScalaALGraph[T] = {
+  def addVertices(vertices: Vertex*): ScalaALGraph[Vertex] = {
     val newEntries = vertices.map(vertex => vertex -> Set.empty[Vertex])
     copy(adjacencyMap = adjacencyMap ++ newEntries)
   }
 
   // O(1) time
-  def addEdge(firstVertex: Vertex, secondVertex: Vertex): ScalaALGraph[T] = {
+  def addEdge(firstVertex: Vertex, secondVertex: Vertex): ScalaALGraph[Vertex] = {
     val updatedAdjacencyMap = connect(firstVertex, secondVertex, adjacencyMap)
     if (isDirected) {
       copy(adjacencyMap = updatedAdjacencyMap)

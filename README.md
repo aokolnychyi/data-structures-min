@@ -263,12 +263,13 @@ with 2-3 Finger Tree and that's why this data structure is very slow on practice
 #### Implementation
 
 A sample immutable queue implementation is available in ``com.aokolnychyi.ds.queue.ScalaQueue``.
-Its mutable counterpart is defined in ``com.aokolnychyi.ds.queue.mutable.ScalaQueue`` and has the
+Its mutable counterpart is defined in ``com.aokolnychyi.ds.queue.mutable.ScalaDeque`` and has the
 same underlying ideas as its Java version. Both implementations support the following features:
 
-- Remove an element (``ScalaQueue#dequeue``)
-- Add an element (``ScalaQueue#enqueue``)
-- Get an optional element (``ScalaQueue#peek``)
+- Remove an element (``ScalaDeque#dequeue``)
+- Add an element (``ScalaDeque#enqueue``)
+- Pop an element (``ScalaDeque#pop``)
+- Push an element (``ScalaDeque#push``)
 
 See examples in the corresponding folders.
 
