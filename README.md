@@ -102,7 +102,9 @@ which means it is a subtype of anything in Scala. There are no instances of ``No
 ``Nothing`` as a return type for methods that never return or return abnormally
 (e.g., throw an exception) ("Beginning Scala" by Vishal Layka, David Pollak).
 - Scala ``List`` is a monad.
-- Scala also has mutable lists. For example, ``MutableList`` and ``ListBuffer``. Quote from [here](https://stackoverflow.com/a/5753935/4108401)
+- Scala also has mutable lists. For example, ``MutableList`` and ``ListBuffer``. A quote from a
+ great [post](https://stackoverflow.com/a/5753935/4108401):
+ 
 "``ListBuffer`` uses internally ``Nil`` and ``::`` to build an immutable ``List`` and allows
 constant-time removal of the first and !!! last elements. Its toList method returns the normal
 immutable ``List`` in constant time as well, as it can directly return the structure maintained
